@@ -1,0 +1,52 @@
+{
+	"author": "mp, pl, <mp@tcs.de> (www.tcs.de)",
+	"name": "milon-tickets",
+	"description": "TCS Ticket System",
+	"version": "0.0.1",
+	"homepage": "tickets.tcs.com",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/smrchy/milonst.git"
+	},
+	"engines": {
+		"node": "> 0.8.20"
+	},
+	"dependencies": {
+		"async": "*",
+		"express": "3.3.x",
+		"connect-redis": "*",
+		"redis": "*",
+		"hiredis": "*",
+		"lodash": "*",
+		"bcrypt": "*",
+		"moment": "*",
+		"request": "*",
+		"rsmq": "*",
+		"tcs_node_mail_client": "*",
+		"extend": "*",
+		"colors": "*",
+		"jade": "*",
+		"i18next": "*",
+		"coffee-script": "*"
+	},
+	"devDependencies": {
+		"should": "*",
+		"grunt": "0.4.x",
+
+		"grunt-replace": "*",
+		"grunt-regarde": "*",
+		"grunt-contrib-stylus": "*",
+		"grunt-contrib-copy": "*",
+		"grunt-contrib-coffee": "*",
+		"grunt-contrib-compress": "*",
+		"grunt-contrib-uglify": "*",
+		"grunt-contrib-jade": "*",
+		"grunt-include-replace": "*",
+		"grunt-cson": "*",
+		"grunt-mocha-cli": "*",
+		"grunt-docker": "*",
+		"cli": "*",
+		"prompt": "*"
+	}
+}

@@ -1,0 +1,24 @@
+extends frame
+
+block append head
+	script( src="/js/lib/bootstrap.min.js" )
+	script( src="/js/login.js" )
+	link( href="/css/login.css", rel="stylesheet" )
+
+block frameContent
+	.container
+		
+		form.form-signin( action="authenticate", method="POST" )
+			span.lead Milon Tickets
+			input.form-control( name="email", value=email type="text", autofocus="", placeholder="E-Mail Adresse")
+			input.form-control( name="password", type="password", placeholder="Passwort" )
+
+			//- Error output
+			if error
+				if error == "login-failed"
+					.alert.alert-warning
+						strong Fehlerhafter login.<br>
+						| Bitte versuchen Sie es erneut.
+				else
+					.alert.alert-danger Es ist ein Fehler aufgetreten
+			button.btn.btn-lg.btn-primary.btn-block( type="submit" ) Anmelden

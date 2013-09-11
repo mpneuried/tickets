@@ -1,0 +1,10 @@
+.panel-heading
+	.panel-title Kommentare
+
+.panel-footer
+	form( role="form" )#addcoment
+		.form-group
+			textarea#ticket-desc.form-control( name="content", placeholder="Ticket Kommentar ..." )= desc
+			p.help-block Es kann die Markdown Syntax verwendet werden
+
+		button.btn.btn-primary.btn-sm.pull-right Kommentieren

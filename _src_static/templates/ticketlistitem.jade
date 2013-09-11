@@ -1,0 +1,12 @@
+a.tickettitle( href="/tickets/" + id )= title
+.user-short.label.label-primary(
+	title=user.name
+	data-toggle="tooltip"
+	data-placement="left"
+)
+	if user.short
+		= user.short
+	else
+		| --
+
+span.infos= changed

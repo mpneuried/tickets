@@ -1,0 +1,37 @@
+extends contentlayout
+
+block name
+	= title
+
+block content
+	a.btn.pull-right.btn-default( href="/tickets/edit/" + id ) bearbeiten
+	.user-short.label.label-primary(
+		title=user.name
+		data-toggle="tooltip"
+		data-placement="left"
+	)
+		if user.short
+			= user.short
+		else
+			| --
+	p= desc
+
+	hr
+
+	.panel.panel-default
+		.panel-heading
+			.panel-title Kommentare
+
+		ul.panel-body#comments
+
+		.panel-footer
+			form( role="form" )#addcoment
+				.form-group
+					textarea#ticket-desc.form-control( name="content", placeholder="Ticket Kommentar ..." )= desc
+					p.help-block Es kann die Markdown Syntax verwendet werden
+
+				button.btn.btn-primary.btn-sm.pull-right( type="submit" ) Kommentieren
+
+	hr
+
+	a.btn.btn-default( href="/tickets" ) zurück

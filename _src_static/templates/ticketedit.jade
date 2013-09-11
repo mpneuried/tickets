@@ -1,0 +1,27 @@
+extends contentlayout
+
+block name 
+	| Ticket 
+	if _isNew
+		| erstellen
+	else
+		| bearbeiten
+
+block content
+	form( role="form" )
+		
+		.form-group
+			label( for="ticket-title" ) Titel
+			input#ticket-title.form-control( name="title", placeholder="Ticket Titel eingeben", value=title )
+		
+		.form-group
+			label( for="ticket-desc" ) Beschreibung
+			textarea#ticket-desc.form-control( name="desc", placeholder="Ticket Beschreibung ..." )= desc
+			p.help-block Es kann die Markdown Syntax verwendet werden
+		
+		if _isNew
+			a.btn.btn-default( href="/tickets" ) Abbrechen
+		else
+			a.btn.btn-default( href="/tickets/" + id ) Abbrechen
+			
+		button.btn.btn-primary.pull-right Speichern

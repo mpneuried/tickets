@@ -1,0 +1,37 @@
+extends frame
+
+block append head
+	link( href="/css/styles.css", rel="stylesheet" )
+	script( src="/js/lib/require.js", data-main="/js/main" )
+
+block append footer
+	script( src="/js/lib/bamboo.js" )
+	:coffeescript
+		$ ->
+			window.bamboo = new Bamboo()
+			return
+
+block frameContent
+	nav#main-nav.navigation.overflow
+		h4.lead Milon Support
+		a.user-short.label.label-primary(
+			title="LOGOUT - " + user.name
+			href="/exit"
+			data-toggle="tooltip"
+			data-placement="left"
+			data-bypass="true"
+		)= user.short
+		#menu
+
+	#container
+		header.primary
+			span.open.icon 
+				.menuline
+				.menuline 
+				.menuline 
+
+			hgroup: h1 Loading ...
+
+		section#scroller.overflow
+			#content
+				block Content
