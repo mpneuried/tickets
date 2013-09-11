@@ -12,7 +12,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 		@extend super,
 			port: 8400,
 			basepath: "/"
-			authentication: false
+			authentication: true
 			express:
 				title: "Milon Tickets"
 				logger: "dev"

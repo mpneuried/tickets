@@ -11,5 +11,6 @@
 /static
 /libs
 /modules
+/config.json
 /*.js
 *.sublime*
