@@ -58,6 +58,8 @@ define [ "backbone"], ( Backbone )->
 	class Tickets extends Collection
 		model: Ticket
 		url: "/api/tickets"
+		comparator : ( el )->
+			return el.get( "changedtime" ) * -1
 
 	class Comments extends Collection
 		model: Comment
@@ -70,6 +72,7 @@ define [ "backbone"], ( Backbone )->
 		fetch: =>
 			@_fetched = true
 			super
+		comparator: "createdtime"
 
 	collections = 
 		tickets: new Tickets()

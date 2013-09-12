@@ -90,7 +90,8 @@ module.exports = class BasicRest extends require( "../../libs/basic" )
 				return
 			if not req.session?.uid?
 				if redirect?
-					res.redirect( redirect )
+					_rdir = redirect + if redirect.indexOf( "?" ) >= 0 then "&" else "?" + "redir=" + encodeURIComponent( req.url )
+					res.redirect( _rdir )
 				else
 					@_error( res, "unauthorized" )
 			else if onlyDev and req.session.role isnt "DEVELOPER"

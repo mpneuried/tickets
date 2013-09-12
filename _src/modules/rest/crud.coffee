@@ -9,10 +9,10 @@ module.exports = class RestCrudBasic extends require( "./basic" )
 				update: true
 				del: false
 			onlyDev: 
-				list: true
+				list: false
 				get: false
-				create: true
-				update: true
+				create: false
+				update: false
 				del: true
 
 	createRoutes: ( basepath, express )=>

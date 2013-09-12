@@ -9,9 +9,12 @@ block frameContent
 	.container
 		
 		form.form-signin( action="authenticate", method="POST" )
+			input( name="redir", type="hidden", value=redir )
+				
 			span.lead Support Tickets
 			input.form-control( name="email", value=email type="text", autofocus="", placeholder="E-Mail Adresse")
 			input.form-control( name="password", type="password", placeholder="Passwort" )
+
 
 			//- Error output
 			if error

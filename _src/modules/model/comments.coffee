@@ -1,4 +1,4 @@
-module.exports = class ModelTickets extends require( "./basic" )
+module.exports = class ModelComments extends require( "./basic" )
 
 	defaults: =>
 		@extend super,

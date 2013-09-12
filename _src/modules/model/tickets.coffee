@@ -2,9 +2,20 @@ module.exports = class ModelTickets extends require( "./basic" )
 
 	defaults: =>
 		@extend super,
-			states: [ "NEW", "REJECTED", "ACCEPTED", "WORKING", "WAITFORREPLY", "CLOSED" ]
+			states: [ "NEW", "PENDING", "ACCEPTED", "WORKING", "NEEDANSWER", "REPLIED", "CLOSED" ]
 			idLength: 5
 			stdLimit: 50
+
+	statematrix: [
+# old	  NEW		PENDING		ACCEPTED	WORKING		NEEDANSWER	REPLIED		CLOSED  | to-set
+		[ true,		false,		false,		false,		false,		false,		false ]	# NEW
+		[ true,		true,		false,		false,		false,		false,		false ]	# PENDING
+		[ true,		true,		true,		false,		false,		false,		false ]	# ACCEPTED
+		[ false,	false,		true,		true,		false,		true,		false ]	# WORKING
+		[ false,	false,		false,		true,		true,		false,		false ]	# NEEDANSWER
+		[ false,	false,		false,		false,		true,		true,		true ]	# REPLIED
+		[ false,	false,		true,		true,		false,		true,		true ]	# CLOSED
+	]
 
 	constructor: ->
 		super
@@ -85,27 +96,43 @@ module.exports = class ModelTickets extends require( "./basic" )
 		
 			@debug "validate", id, data
 
-			if current?.state is @stateCLOSED
-				@_handleError( cb, "validation-closed" )
-				return
-
 			_pick = [ "title", "desc" ]
 
 			if id?
 
-				data = _.pick( data, _pick.concat( [ "state" ] ) )
+				data = _.pick( data, _pick.concat( [ "state", "editor" ] ) )
+
+				data.changedtime = sec
 
 				if data?.state?.length and data.state isnt current.state and data?.state not in @config.states[1..]
 					@_handleError( cb, "validation-state", states: @config.states[1..] )
 					return
+			
+				if not @statematrix[ @config.states.indexOf( data.state ) ][ @config.states.indexOf( current.state ) ]
+					@_handleError( cb, "validation-state-change", current: current.state, set: data.state )
+					return			
+
+				data.closedtime = 0
+				if data.state? and data.state is @stateCLOSED
+					data.closedtime = sec
 
 				if data.state? and data.state is @stateACCEPTED
 					data.acceptedtime = sec
 
-				if data.state? and data.state is @stateCLOSED
-					data.closedtime = sec		
+					if not data?.editor?.length or data.editor.length isnt ( @app.models?.users?.config?.idLength or 5 )
+						@_handleError( cb, "validation-editor" )
+						return
 
-				data.changedtime = sec
+					@_validateUser data?.editor, ( err )=>
+						if err
+							cb( err )
+							return
+						cb( null, data )	
+						return						
+				else
+					delete data.editor
+					cb( null, data )
+
 
 			else
 
@@ -128,8 +155,9 @@ module.exports = class ModelTickets extends require( "./basic" )
 				data.changedtime = sec
 				data.acceptedtime = 0
 				data.closedtime = 0
+				data.editor = null
 
-			cb( null, data )
+				cb( null, data )
 			return
 		return
 
@@ -152,5 +180,7 @@ module.exports = class ModelTickets extends require( "./basic" )
 			"validation-title": "You have to define a title"
 			"validation-desc": "You have to define a description"
 			"validation-author": "You have to define a valid author"
+			"validation-editor": "You have to define a valid editor"
 			"validation-state": "You have to define a state of (<%= states.join( ', ' ) %>)"
+			"validation-state-change": "It is not allowed to change the state from `<%= current %>` to `<%= set %>`"
 			"validation-query-limit": "You can only use a number as limit"

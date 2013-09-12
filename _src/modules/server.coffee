@@ -11,6 +11,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 	defaults: =>
 		@extend super,
 			port: 8400,
+			host: "localhost"
 			basepath: "/"
 			authentication: true
 			express:
@@ -75,6 +76,10 @@ module.exports = class AppServer extends require( "../libs/basic" )
 	load: =>
 		# load non rest modules
 		@authenticator =  new ( require( "./authenticator" ) )( @, @_getConfig( "authenticator" ) )
+		@workflow =  new ( require( "./workflow" ) )( @, @_getConfig( "workflow" ) )
+		@notifications =  new ( require( "./notifications" ) )( @, @_getConfig( "notifications" ) )
+		@mailservice =  new ( require( "./mailservice" ) )( @, @_getConfig( "mailservice" ) )
+		#@pushoverservice =  new ( require( "./pushoverservice" ) )( @, @_getConfig( "pushoverservice" ) )
 
 		# init models
 		@models.users = new ( require( "./model/users" ) )( "users", @, @_getConfig( "users" ) )
@@ -109,9 +114,9 @@ module.exports = class AppServer extends require( "../libs/basic" )
 	start: =>
 		# we instantiate the app using express 2.x style in order to use socket.io
 		server = http.createServer( @express )
-		server.listen( @config.port )
+		server.listen( @config.port, @config.host )
 	
-		@log "info", "http listen to port #{ @config.port }"
+		@log "info", "http listen to port #{@config.host}:#{ @config.port }"
 		return
 
 	allowCrossDomain: ( req, res, next ) =>

@@ -15,17 +15,7 @@ module.exports = class ModelUsers extends require( "./basic" )
 		else
 			_type = "authors"
 
-		if query.offset? and isNaN( ( _offset = parseInt( query.offset ) ) )
-			@_handleError( cb, "validation-query-offset" )
-			return	
-
-		if query.limit? and isNaN( ( _limit = parseInt( query.limit ) ) )
-			@_handleError( cb, "validation-query-limit" )
-			return
-		else
-			_limit = _limit or @config.stdLimit
-
-		@redis.zrangebyscore @_rKey( null, _type ), "-inf", "+inf", "LIMIT", _offset or 0, _limit, ( err, ids )=>
+		@redis.smembers @_rKey( null, _type ), ( err, ids )=>
 			if err
 				cb( err )
 				return
@@ -62,6 +52,18 @@ module.exports = class ModelUsers extends require( "./basic" )
 			return
 		return
 
+	getRandomAvailibleDeveloper: ( cb )=>
+		@redis.srandmember @_rKey( null, "availibledevelopers" ), 1, ( err, results )=>
+			if err
+				cb( err )
+				return
+			if results?[ 0 ]?
+				cb( null, results[ 0 ] )
+			else
+				@_handleError( null, "no-randomuser-found" )
+			return
+		return
+
 	_update: ( id, data, current, cb )=>
 		rM = []
 		mSet = []
@@ -76,13 +78,19 @@ module.exports = class ModelUsers extends require( "./basic" )
 			rM.push( [ "HSET", @_rKey( null, "emails" ), data.email, id ] )
 
 		# update user lists
-		if current.role isnt data.role
+		if data.role? and current.role isnt data.role
 			if data.role is "DEVELOPER"
 				rM.push( [ "ZREM", @_rKey( null, "users" ), id ] )
-				rM.push( [ "ZADD", @_rKey( null, "developers" ), data.notifyCount, id ] )
+				rM.push( [ "SADD", @_rKey( null, "developers" ), id ] )
 			else
 				rM.push( [ "ZREM", @_rKey( null, "developers" ), id ] )
-				rM.push( [ "ZADD", @_rKey( null, "users" ), data.ticketCount, id ] )
+				rM.push( [ "SADD", @_rKey( null, "users" ), id ] )
+
+		if data.available isnt current.available
+			if data.available
+				rM.push( [ "SADD", @_rKey( null, "availibledevelopers" ), id ] )
+			else
+				rM.push( [ "SREM", @_rKey( null, "availibledevelopers" ), id ] )
 
 		@redis.multi( rM ).exec @_handleReturn( "update", id, data, current, cb )
 		return
@@ -97,18 +105,23 @@ module.exports = class ModelUsers extends require( "./basic" )
 		rM.push( [ "HMSET", @_rKey( id ) ].concat( mSet ) )
 		rM.push( [ "HSET", @_rKey( null, "emails" ), data.email, id ] )
 
-		rM.push( [ "ZADD", @_rKey( null, "authors" ), 0, id ] )
+		rM.push( [ "SADD", @_rKey( null, "authors" ), id ] )
 
 		if data.role is "DEVELOPER"
-			rM.push( [ "ZADD", @_rKey( null, "developers" ), 0, id ] )
+			rM.push( [ "SADD", @_rKey( null, "developers" ), id ] )
+			if data.available
+				rM.push( [ "SADD", @_rKey( null, "availibledevelopers" ), id ] )
+			else
+				rM.push( [ "SREM", @_rKey( null, "availibledevelopers" ), id ] )	
 		else
-			rM.push( [ "ZADD", @_rKey( null, "users" ), 0, id ] )
+			rM.push( [ "SADD", @_rKey( null, "users" ), id ] )
 
 		@redis.multi( rM ).exec @_handleReturn( "create", id, data, cb )
 		return
 
 	_beforeReturn: ( data )=>
-		data.availible = Boolean( data.availible ) or false
+
+		data.available = if data.available is "true" then true else false
 		data.notifyCount = parseInt( data.notifyCount, 10 ) or 0
 		data.reactionCount = parseInt( data.reactionCount, 10 ) or 0
 		data.ticketCount = parseInt( data.ticketCount, 10 ) or 0
@@ -135,7 +148,10 @@ module.exports = class ModelUsers extends require( "./basic" )
 			if data?.password?.length
 				salt = bcrypt.genSaltSync( @config.bcryptRounds )
 				data.password = bcrypt.hashSync( data.password, salt )
-				
+			
+			if data?.role is "DEVELOPER" or current?.role is "DEVELOPER"
+				if data?.available?
+					data.available = Boolean( data.available )
 
 		else
 			if not data?.name?.length
@@ -150,6 +166,9 @@ module.exports = class ModelUsers extends require( "./basic" )
 				@_handleError( cb, "validation-email" )
 				return
 
+			if not data?.pushkey?.length 
+				data.pushkey = null
+
 			if not data?.role?.length or data?.role not in @app.config.roles
 				@_handleError( cb, "validation-role", roles: @app.config.roles )
 				return
@@ -161,11 +180,24 @@ module.exports = class ModelUsers extends require( "./basic" )
 				salt = bcrypt.genSaltSync( @config.bcryptRounds )
 				data.password = bcrypt.hashSync( data.password, salt )
 
+			if data.role is "DEVELOPER"
+				if data?.available?
+					data.available = Boolean( data.available )
+			else
+				data.available = false
+
+
+
 			data.notifyCount = 0
 			data.reactionCount = 0
 			data.ticketCount = 0
 
-		if not id? or data.email isnt current.email
+		# stop if email is not updated
+		if id? and not data.email?
+			cb( null, data )
+			return
+
+		if data.email isnt current.email
 			@getByMail data.email, true, ( err, exists )=>
 				if err
 					cb( err )
@@ -189,3 +221,4 @@ module.exports = class ModelUsers extends require( "./basic" )
 			"validation-email": "You have to define a valid email"
 			"validation-role": "You have to define a role of (<%= roles.join( ', ' ) %>)"
 			"validation-email-exists": "The given email `<%= email %>` allready exists."
+			"no-randomuser-found": "No random user availible"

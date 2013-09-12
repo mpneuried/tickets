@@ -1,9 +1,13 @@
+
 extends contentlayout
 
 block name
 	= title
 
 block content
+	- var states = [ "NEW", "REJECTED", "ACCEPTED", "WORKING", "OPENREPLY", "CLOSED" ]
+	- var stateIdx = states.indexOf( state )
+
 	a.btn.pull-right.btn-default( href="/tickets/edit/" + id ) bearbeiten
 	.user-short.label.label-primary(
 		title=user.name
@@ -17,6 +21,14 @@ block content
 	p= desc
 
 	hr
+
+	ul.stateprocess
+		each item, i in states
+			li(
+				style= "width:" + 100/states.length + "%"
+				class= stateIdx == i ? "active" : stateIdx >= i ? "done" : "open"
+			)= item
+
 
 	.panel.panel-default
 		.panel-heading

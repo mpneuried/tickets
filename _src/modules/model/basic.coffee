@@ -126,6 +126,28 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 			return
 		return
 
+	_validateUser: ( users, cb )=>
+		if not _.isArray( user )
+			users = [ users ]
+
+		rM = []
+		for user in users
+			rM.push( [ "EXISTS", @_rKey( user, "users" ) ]) if user?
+
+		@redis.multi( rM ).exec ( err, results )=>
+			if err
+				cb( err )
+				return
+
+			@debug "_validateUser", results
+
+			for result, idx in results when not result
+				@_handleError( cb, "validation-user-notexists", uid: users[ idx ] )
+				return
+
+			cb( null ) 
+			return
+
 	_validateDataAndGetTime: =>
 		[ args..., cb ] = arguments
 		[ user, ticket ] = args
@@ -183,7 +205,6 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 					cb( null, @_beforeReturn( data ) )
 					return
 				when "list"
-					console.log data, id
 					_ret = []
 					for el, idx in data when data?
 						_el = @_beforeReturn( el )
@@ -194,6 +215,9 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 					return
 				when "update"
 					@debug "return update", arguments, id, input, old
+					for _k, _v of old when input[ _k ]? and input[ _k ] isnt _v
+						@emit "changed:#{_k}", id, input[ _k ], _v
+
 					_ret = @extend( true, old, input ) 
 					_ret.id = id
 					_ret = @_beforeReturn( _ret )
@@ -217,4 +241,5 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 		@extend super, 
 			"not-implemented": "This feature has not been implemented"
 			"validation-author-notexists": "The user id `<%= uid %>` not exists"
+			"validation-user-notexists": "The user id `<%= uid %>` not exists"
 			"validation-ticket-notexists": "The ticket id `<%= tid %>` not exists"

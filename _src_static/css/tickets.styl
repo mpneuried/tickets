@@ -14,7 +14,13 @@
 		position relative
 		border-bottom 1px solid linecolor
 		padding 5px
+		padding-left 30px
 		
+		.state
+			position absolute
+			left 0px
+			top 16px
+
 		.tickettitle
 			font-size 15px
 			display block
@@ -28,6 +34,33 @@
 			color 
 
 .ticketDetail
+	.stateprocess
+		height 20px
+		list-style none
+		padding 0
+		margin 0 0 15px 0
+		border-radius 3px
+		overflow hidden
+		li
+			height 20px
+			padding 0
+			margin 0
+			float left
+			display block
+			background-color linecolor - 20%
+			border-left 1px solid linecolor + 10%
+			text-align center
+			font-size 11px
+			line-height 20px
+			color bgcolor
+			font-weight bold
+		li.done
+			background-color donecolor
+		li.active
+			background-color activecolor
+		li:first-child
+			border-left 0 solid
+
 	#comments
 		list-style none
 		padding 0

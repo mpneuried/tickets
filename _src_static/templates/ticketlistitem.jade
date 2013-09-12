@@ -1,3 +1,42 @@
+case state
+	when "NEW"
+
+		span.state.label.label-primary(
+			title=state
+			data-toggle="tooltip"
+			data-placement="right"
+		)= state.split( "" )[ 0 ]
+	when "ACCEPTED"
+		span.state.label.label-info(
+			title=state
+			data-toggle="tooltip"
+			data-placement="right"
+		)= state.split( "" )[ 0 ]
+	when "WORKING"
+		span.state.label.label-success(
+			title=state
+			data-toggle="tooltip"
+			data-placement="right"
+		)= state.split( "" )[ 0 ]
+	when "OPENREPLY"
+		span.state.label.label-warning(
+			title=state
+			data-toggle="tooltip"
+			data-placement="right"
+		)= state.split( "" )[ 0 ]
+	when "CLOSED"
+		span.state.label.label-error(
+			title=state
+			data-toggle="tooltip"
+			data-placement="right"
+		)= state.split( "" )[ 0 ]
+	default
+		span.state.label.label-default(
+			title=state
+			data-toggle="tooltip"
+			data-placement="right"
+		)= state.split( "" )[ 0 ]
+
 a.tickettitle( href="/tickets/" + id )= title
 .user-short.label.label-primary(
 	title=user.name
@@ -9,4 +48,5 @@ a.tickettitle( href="/tickets/" + id )= title
 	else
 		| --
 
-span.infos= changed
+small.infos geändert #{changed}
+

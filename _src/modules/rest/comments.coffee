@@ -1,4 +1,4 @@
-module.exports = class RestTickets extends require( "./crud" )
+module.exports = class RestComments extends require( "./crud" )
 
 	createRoutes: ( basepath, express )=>
 
@@ -29,6 +29,7 @@ module.exports = class RestTickets extends require( "./crud" )
 		_body = req.body
 
 		_body.ticket = _tid
+		_body.type = "user"
 
 		@model.update _id, _body, @_expressReturn( "update", res )
 		return
@@ -40,6 +41,8 @@ module.exports = class RestTickets extends require( "./crud" )
 		_body.author = req.session.uid
 
 		_body.ticket = _tid
+		_body.type = "user"
+		
 		@debug "create", _tid, _body
 		@model.create _body, @_expressReturn( "create", res )
 		return
