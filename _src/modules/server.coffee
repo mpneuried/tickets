@@ -14,7 +14,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 			basepath: "/"
 			authentication: true
 			express:
-				title: "Milon Tickets"
+				title: "Support Tickets"
 				logger: "dev"
 				tmpFolder: null
 			redis:

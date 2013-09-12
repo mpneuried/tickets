@@ -1,13 +1,13 @@
 {
 	"author": "mp, pl, <mp@tcs.de> (www.tcs.de)",
-	"name": "milon-tickets",
-	"description": "TCS Ticket System",
+	"name": "redis-tickets",
+	"description": "TCS Support Ticket System",
 	"version": "0.0.1",
-	"homepage": "tickets.tcs.com",
-	"private": true,
+	"homepage": "https://github.com/mpneuried/tickets",
+	"private": false,
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/smrchy/milonst.git"
+		"url": "git://github.com/mpneuried/tickets.git"
 	},
 	"engines": {
 		"node": "> 0.8.20"

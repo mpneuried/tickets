@@ -15,7 +15,7 @@ Redis based support ticket system
 * Name
 * email
 * pushkey
-* Rolle ( TCS, MILON )
+* Rolle ( USER, DEVELOPER )
 * Status ( erriechbar, gesperrt )
 * NotifyCount
 * ReactionCount
