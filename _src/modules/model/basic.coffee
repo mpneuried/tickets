@@ -183,8 +183,9 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 					cb( null, @_beforeReturn( data ) )
 					return
 				when "list"
+					console.log data, id
 					_ret = []
-					for el, idx in data
+					for el, idx in data when data?
 						_el = @_beforeReturn( el )
 						_el.id = id[ idx ]
 						_ret.push _el

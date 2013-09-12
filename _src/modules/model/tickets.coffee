@@ -89,11 +89,11 @@ module.exports = class ModelTickets extends require( "./basic" )
 				@_handleError( cb, "validation-closed" )
 				return
 
-			_omit = [ "starttime", "acceptedtime", "closedtime", "changedtime" ]
+			_pick = [ "title", "desc" ]
 
 			if id?
 
-				data = _.omit( data, _omit.concat( [ "author" ] ) )
+				data = _.pick( data, _pick.concat( [ "state" ] ) )
 
 				if data?.state?.length and data.state isnt current.state and data?.state not in @config.states[1..]
 					@_handleError( cb, "validation-state", states: @config.states[1..] )
@@ -109,7 +109,7 @@ module.exports = class ModelTickets extends require( "./basic" )
 
 			else
 
-				data = _.omit( data, _omit.concat( [ "state" ] ) )
+				data = _.pick( data, _pick.concat( [ "author" ] ) )
 
 				if not data?.author?.length or data.author.length isnt ( @app.models?.users?.config?.idLength or 5 )
 					@_handleError( cb, "validation-author" )
@@ -128,7 +128,6 @@ module.exports = class ModelTickets extends require( "./basic" )
 				data.changedtime = sec
 				data.acceptedtime = 0
 				data.closedtime = 0
-
 
 			cb( null, data )
 			return

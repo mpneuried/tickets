@@ -2,10 +2,10 @@ extends frame
 
 block append head
 	link( href="/css/styles.css", rel="stylesheet" )
-	script( src="/js/lib/require.js", data-main="/js/main" )
+	script( src="/js/vendor/require.js", data-main="/js/main" )
 
 block append footer
-	script( src="/js/lib/bamboo.js" )
+	script( src="/js/vendor/bamboo.js" )
 	:coffeescript
 		$ ->
 			window.bamboo = new Bamboo()

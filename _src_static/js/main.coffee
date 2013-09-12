@@ -1,12 +1,12 @@
 require.config
 	paths:
-		#jquery: "lib/jquery-2.0.3"
-		bootstrap: "lib/bootstrap.min"
-		backbone: "lib/backbone"
-		underscore: "lib/underscore"
-		moment: "lib/moment"
-		marionette: "lib/backbone.marionette"
-		jade: "lib/jaderuntime"
+		#jquery: "vendor/jquery-2.0.3"
+		bootstrap: "vendor/bootstrap.min"
+		backbone: "vendor/backbone"
+		underscore: "vendor/underscore"
+		moment: "vendor/moment"
+		marionette: "vendor/backbone.marionette"
+		jade: "vendor/jaderuntime"
 		tmpl: "tmpl"
 	shim:
 		underscore:

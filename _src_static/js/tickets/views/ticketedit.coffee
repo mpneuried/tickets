@@ -3,7 +3,6 @@ define [ "marionette", "app", "tickets/collections", "tmpl" ], ( marionette, App
 	class TicketEdit extends marionette.ItemView
 		template: tmpl.ticketedit
 		serializeData: =>
-			console.log App
 			_data = @model.toJSON()
 			_data._isNew = @model.isNew()
 			return _data
@@ -38,9 +37,9 @@ define [ "marionette", "app", "tickets/collections", "tmpl" ], ( marionette, App
 			event.preventDefault()
 
 			if @model.isNew()
-				@collection.create( @formData(), wait: true )
+				@collection.create( @formData(), { wait: true } )
 			else
-				@model.save( @formData() )
+				@model.save( @formData(), { _ignoreComments: true } )
 			return
 
 	return TicketEdit

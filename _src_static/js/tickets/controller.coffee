@@ -1,57 +1,39 @@
-define [ "marionette", "app", "tickets/collections", "tickets/views/ticketlist", "tickets/views/ticketview", "tickets/views/ticketedit" ], ( marionette, App, collections, viewTicketList, viewTicket, viewTicketEdit )->
+define [ "marionette", "lib/modulecontroller", "app", "tickets/collections", "tickets/views/ticketlist", "tickets/views/ticketview", "tickets/views/ticketedit" ], ( marionette, ModuleController, App, collections, viewTicketList, viewTicket, viewTicketEdit )->
 
-	return class Controller
+	return class Controller extends ModuleController
 
-		routes: 
-			'tickets': 'list'
-			'tickets/new': 'add'
-			'tickets/:id': 'view'
-			'tickets/edit/:id': 'edit'
+		config: 
+			list:
+				event: "tickets:list"
+				route: "tickets"
+			add: 
+				event: "tickets:add"
+				route: "tickets/new"
+			view:
+				event: "tickets:view"
+				route: "tickets/:id"
+			edit:
+				event: "tickets:edit"
+				route: "tickets/edit/:id"	
 
-		constructor: ( @module )->
-
-			App.vent.on "tickets:list", @list
-			App.vent.on "tickets:view", @view
-			App.vent.on "tickets:add", @add
-			App.vent.on "tickets:edit", @edit
-
-			@module.router = new marionette.AppRouter
-				appRoutes: @routes
-				controller: @
-
-			return
-
-		checkInitialized: ( cb, args )=>
-			if App.Tickets._isInitialized
-					cb.apply( cb, args )
-				else
-					App.Tickets.on "start", =>
-						cb.apply( cb, args )
-						return
-			return
-
-		list: =>@checkInitialized( @_list, arguments )
-		view: =>@checkInitialized( @_view, arguments )
-		add: =>@checkInitialized( @_add, arguments )
-		edit: =>@checkInitialized( @_edit, arguments )
-
-		_view: ( id )=>
-
+		view: ( id )=>
 			model = collections.tickets.get( id )
 			App.content.show( new viewTicket( collection: model.get( "comments" ), model: model ) )
-			#Backbone.navigate(  )
+			@navigate( "view", id: id )
 			return
 
-		_list: =>
-			console.log arguments
+		list: =>
 			App.content.show( new viewTicketList( collection: collections.tickets ) )
+			@navigate( "list" )
 			return
 
-		_add: =>
+		add: =>
 			App.content.show( new viewTicketEdit( collection: collections.tickets, model: new collections.tickets.model() ) )
+			@navigate( "add" )
 			return
 
-		_edit: ( id )=>
+		edit: ( id )=>
 			model = collections.tickets.get( id )
 			App.content.show( new viewTicketEdit( collection: collections.tickets, model: model ) )
+			@navigate( "edit", id: id )
 			return

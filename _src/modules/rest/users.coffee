@@ -1,7 +1,6 @@
 module.exports = class RestUsers extends require( "./crud" )
 		
 	_beforeSend: ( type, data )=>
-		console.log data, type
 		if type is "list"
 			_ret = []
 			for el in data

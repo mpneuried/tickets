@@ -2,7 +2,7 @@ fs = require "fs"
 extend = require( "extend" )
 
 fs.readFile "config.json", ( err, file )=>
-	if err.code is "ENOENT"
+	if err?.code is "ENOENT"
 		_cnf = {}
 	else if err
 		throw err

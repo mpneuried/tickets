@@ -18,19 +18,29 @@ define [ "backbone"], ( Backbone )->
 			author: ""
 			comments: []
 
-		parse: ( data )=>
-			_commentsColl = @get( "comments" )
-			if data.comments?.length
-				if _commentsColl?
-					_commentsColl.reset( data.comments )
-				else
-					data.comments = new Comments( data.comments, { ticket: @ } )
+		parse: ( data, options )=>
+
+			if options._ignoreComments
+				data = _.omit( data, ["comments"] )
 			else
-				if _commentsColl?
-					_commentsColl.reset()
+				_commentsColl = @get( "comments" )
+				#console.log "parse", data, _commentsColl
+				if data.comments?.length
+					if _commentsColl?
+						_commentsColl.reset( data.comments )
+					else
+						data.comments = new Comments( data.comments, { ticket: @ } )
 				else
-					data.comments = new Comments( [], { ticket: @ })
+					if _commentsColl?
+						_commentsColl.reset()
+					else
+						data.comments = new Comments( [], { ticket: @ })
+
 			return data
+
+		toJSON: ( options )=>
+			# prevent from saving comments
+			return _.clone( _.omit( this.attributes, ["comments"] ) ) 
 
 	class Comment extends Model
 		urlRoot: =>
