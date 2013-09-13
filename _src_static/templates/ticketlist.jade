@@ -2,7 +2,10 @@ extends contentlayout
 
 block name 
 	| Tickets
-	a.btn.btn-primary.addticket( href="/tickets/new" ) neues Ticket
+
+block footer
+	section.footer
+		a.btn.btn-primary.addticket.pull-right( href="/tickets/new" ) neues Ticket
 
 block content
 	ul#ticketlist

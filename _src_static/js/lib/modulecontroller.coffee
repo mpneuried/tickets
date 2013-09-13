@@ -47,4 +47,5 @@ define [ "marionette", "app" ], ( marionette, App )->
 						_route = _route.replace( ":#{_k}", _v )
 
 				Backbone.history.navigate( _route, trigger: false )
+				@module.app.vent.trigger( "navigate:after", _route, @module )
 			return

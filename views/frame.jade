@@ -12,12 +12,10 @@ html(lang="de")
 			meta( name="viewport", content="initial-scale=1, maximum-scale=1" )
 			meta( name="apple-mobile-web-app-capable", content="yes" )
 
-			#script( src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" )
+			//script( src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" )
 			:coffeescript
 				if typeof jQuery == 'undefined'
 					document.write unescape("%3Cscript src='/js/vendor/jquery-2.0.3.js' type='text/javascript'%3E%3C/script%3E")
 
 	body
 		block frameContent
-
-	block footer

@@ -1,5 +1,102 @@
+html
+body
+	padding 0
+	margin 0
+
 body
 	background-color bgcolor
 
 .content
 	margin 10px 20px
+
+h1
+h2
+h3
+h4
+h5
+h6
+	margin 0 0 10px 0
+
+
+#page
+	box-shadow none
+
+	nav
+		display none
+
+a#open-icon-header
+	background center center no-repeat transparent
+	display block
+	width 60px
+	height 60px
+	position fixed
+	top 0
+	left 0
+	color #eee
+	font-size 20px
+	line-height 59px
+	padding 0 20px
+	text-decoration none
+	z-index 2
+
+section.header
+	position fixed
+	top 0
+	right 0
+	left 0
+	padding 10px 20px
+	background-color rgba( black, .7 )
+	height 61px
+	z-index 1
+	h3.lead
+		font-size 25px
+		color #fff
+		margin 0
+		padding 0
+		font-weight 100
+		text-align center 
+
+section.content
+	padding 60px 0 90px
+	margin 0
+
+section.footer
+	position fixed
+	bottom 0
+	right 0
+	left 0
+	padding 10px 20px
+	background-color rgba( black, .15 )
+	z-index 1
+
+	.btn.pull-right
+		margin-left 10px
+
+.mm-opening
+.mm-opened
+	section.header
+	section.footer
+		left 0
+
+@media( max-width: 499px )
+	#open-icon-menu
+		display none
+
+@media( min-width: 500px )
+	a#open-icon-header
+		display none
+
+	section.header
+	section.footer
+		left 60px
+
+@media( min-width: 900px )
+	#open-icon-menu
+		display none
+
+	#mmenu-blocker
+		display none !important
+
+	section.header
+	section.footer
+		left 250px

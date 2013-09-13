@@ -73,7 +73,8 @@ module.exports = class ModelUsers extends require( "./basic" )
 		rM.push( [ "HMSET", @_rKey( id ) ].concat( mSet ) )
 
 		# update email mapping
-		if current.email isnt data.email
+		console.log 	current.email, data.email
+		if data.email? and current.email isnt data.email
 			rM.push( [ "HDEL", @_rKey( null, "emails" ), current.email ] )
 			rM.push( [ "HSET", @_rKey( null, "emails" ), data.email, id ] )
 
@@ -195,7 +196,7 @@ module.exports = class ModelUsers extends require( "./basic" )
 			cb( null, data )
 			return
 
-		if data.email isnt current.email
+		if data.email isnt current?.email
 			@getByMail data.email, true, ( err, exists )=>
 				if err
 					cb( err )

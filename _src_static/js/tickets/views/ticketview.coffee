@@ -7,8 +7,8 @@ define [ "marionette", "moment", "tmpl", "tickets/collections" ], ( marionette, 
 
 		serializeData: =>
 			_data = @model?.toJSON() or {}
-			_user = collections?.users?.get( _data.author )
-			_data.user = _user?.toJSON() or {}
+			_author = collections?.users?.get( _data.author )
+			_data.author = _author?.toJSON() or {}
 			_data.changed = moment( _data.changedtime * 1000 ).fromNow()
 			return _data
 
@@ -16,7 +16,7 @@ define [ "marionette", "moment", "tmpl", "tickets/collections" ], ( marionette, 
 		template: tmpl.ticketview
 		itemViewContainer: "#comments"
 		itemView: CommentView
-		className: "ticketDetail"
+		className: "ticketdetail"
 
 		events: 
 			"submit form": "save"
@@ -43,7 +43,10 @@ define [ "marionette", "moment", "tmpl", "tickets/collections" ], ( marionette, 
 		serializeData: =>
 			_data = @model?.toJSON() or {}
 			_user = collections?.users?.get( _data.author )
-			_data.user = _user?.toJSON() or {}
+			_author = collections?.users?.get( _data.author )
+			_data.author = _author?.toJSON() or {}
+			_editor = collections?.users?.get( _data.editor )
+			_data.editor = _editor?.toJSON() or {}
 			_data.changed = moment( _data.changedtime * 1000 ).fromNow()
 			return _data
 

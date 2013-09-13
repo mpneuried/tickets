@@ -6,11 +6,12 @@ module.exports = class Authenticator extends require( "../libs/basic" )
 	login: ( req, email, password, cb )=>
 
 		@app.models.users.getByMail email, ( err, user )=>
+			@debug "getbymail", email, user
 			if err
 				@_delayError( cb, "login-failed" )
 				return
-
 			bcrypt.compare password, user.password, ( err, same )=>
+				@debug "chackpw", user.password, err, same
 				if err or not same
 					@_delayError( cb, "login-failed" )
 					return

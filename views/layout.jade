@@ -2,36 +2,30 @@ extends frame
 
 block append head
 	link( href="/css/styles.css", rel="stylesheet" )
+	script( src="/js/vendor/jquery.mmenu.js" )
 	script( src="/js/vendor/require.js", data-main="/js/main" )
-
-block append footer
-	script( src="/js/vendor/bamboo.js" )
 	:coffeescript
 		$ ->
-			window.bamboo = new Bamboo()
+			$('#menu').mmenu()
 			return
 
 block frameContent
-	nav#main-nav.navigation.overflow
+	nav#menu
+
 		h4.lead Support Tickets
-		a.user-short.label.label-primary(
-			title="LOGOUT - " + user.name
-			href="/exit"
-			data-toggle="tooltip"
-			data-placement="left"
-			data-bypass="true"
-		)= user.short
-		#menu
+		//- a.user-short.label.label-primary(
+		//- 	title="LOGOUT - " + user.name
+		//- 	href="/exit"
+		//- 	data-toggle="tooltip"
+		//- 	data-placement="left"
+		//- 	data-bypass="true"
+		//- )= user.short
 
-	#container
-		header.primary
-			span.open.icon 
-				.menuline
-				.menuline 
-				.menuline 
+		#menuitems		
+				
 
-			hgroup: h1 Loading ...
-
-		section#scroller.overflow
-			#content
-				block Content
+	#page
+		#container
+			block Content
+		a#open-icon-header( href="#menu" )
+			i( class=[ "icon", "icon-white", "icon-ellipsis-horizontal" ] )

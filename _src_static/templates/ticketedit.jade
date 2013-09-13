@@ -19,9 +19,10 @@ block content
 			textarea#ticket-desc.form-control( name="desc", placeholder="Ticket Beschreibung ..." )= desc
 			p.help-block Es kann die Markdown Syntax verwendet werden
 		
-		if _isNew
-			a.btn.btn-default( href="/tickets" ) Abbrechen
-		else
-			a.btn.btn-default( href="/tickets/" + id ) Abbrechen
-			
-		button.btn.btn-primary.pull-right Speichern
+		section.footer
+			if _isNew
+				a.btn.btn-link( href="/tickets" ) Abbrechen
+			else
+				a.btn.btn-link( href="/tickets/" + id ) Abbrechen
+				
+			button.btn.btn-primary.pull-right Speichern

@@ -14,7 +14,7 @@ module.exports = (grunt) ->
 				files: ["_src_static/templates/*.jade"]
 				tasks: [ "jade:frontend" ]
 			css:
-				files: ["_src_static/css/*.styl"]
+				files: ["_src_static/css/*.*"]
 				tasks: [ "stylus" ]
 			static:
 				files: ["_src_static/static/**/*.*"]

@@ -5,45 +5,53 @@ block name
 	= title
 
 block content
-	- var states = [ "NEW", "REJECTED", "ACCEPTED", "WORKING", "OPENREPLY", "CLOSED" ]
+	- var states = [ "NEW", "PENDING", "ACCEPTED", "WORKING", "NEEDANSWER", "REPLIED", "CLOSED" ]
 	- var stateIdx = states.indexOf( state )
-
-	a.btn.pull-right.btn-default( href="/tickets/edit/" + id ) bearbeiten
-	.user-short.label.label-primary(
-		title=user.name
-		data-toggle="tooltip"
-		data-placement="left"
-	)
-		if user.short
-			= user.short
-		else
-			| --
-	p= desc
-
-	hr
 
 	ul.stateprocess
 		each item, i in states
 			li(
 				style= "width:" + 100/states.length + "%"
 				class= stateIdx == i ? "active" : stateIdx >= i ? "done" : "open"
-			)= item
+				title=item
+				data-toggle="tooltip"
+				data-placement="bottom"	
+			)
+				span.short= item[0]
+				span.long= item
+
+	//h3.title= title
+
+	p.desc= desc
+
+	h4.comments Kommentare
+
+	#comments
+
+	form( role="form" )#addcoment
+		.form-group
+			textarea#ticket-desc.form-control( name="content", placeholder="Ticket Kommentar ..." )= desc
+			small.help-block Es kann die Markdown Syntax verwendet werden
+
+		case state
+			when "NEW"			
+				button.btn.btn-default.btn-sm.pull-right( type="submit" ) Akzeptieren / Kommentieren
+			when "ACCEPTED"			
+				button.btn.btn-primary.btn-sm.pull-right( type="submit" ) Frage stellen
+		button.btn.btn-default.btn-sm.pull-right( type="submit" ) Kommentieren
+
+block header
+	if editor
+		.editor.label.label-primary(
+			title=editor.name
+			data-toggle="tooltip"
+			data-placement="left"
+		)= editor.short
 
 
-	.panel.panel-default
-		.panel-heading
-			.panel-title Kommentare
+block footer
+	section.footer
+		a.btn.btn-link( href="/tickets" ) zurück
+		a.btn.btn-default.pull-right( href="/tickets/edit/" + id ) bearbeiten
 
-		ul.panel-body#comments
-
-		.panel-footer
-			form( role="form" )#addcoment
-				.form-group
-					textarea#ticket-desc.form-control( name="content", placeholder="Ticket Kommentar ..." )= desc
-					p.help-block Es kann die Markdown Syntax verwendet werden
-
-				button.btn.btn-primary.btn-sm.pull-right( type="submit" ) Kommentieren
-
-	hr
-
-	a.btn.btn-default( href="/tickets" ) zurück
+		a.btn.btn-danger.pull-right( href="/tickets/edit/" + id + "/close" ) schließen

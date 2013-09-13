@@ -25,8 +25,14 @@ require.config
 			deps: [ "jade" ]
 
 
-require [ "app", "tickets/app" ], ( Main, Tickets )->
+require [ "bootstrap", "app", "tickets/app" ], ( Bootstrap, Main, Tickets )->
 
 	#window.Main = Main
 	Main.start()
+
+	$( 'body' ).on 'mouseenter.tooltip.data-api', '[data-toggle^=tooltip]', ( el )->
+		$( @ ).removeAttr( "data-toggle" ).tooltip( delay: { show: 500, hide: 100 } ).tooltip( "show" )
+		$( @ ).on "click", ()->
+			$( @ ).tooltip( "hide" )
+		return
 	return

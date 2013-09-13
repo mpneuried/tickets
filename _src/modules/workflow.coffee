@@ -44,9 +44,13 @@ module.exports = class Workflow extends require( "../libs/basic" )
 	selectRandomEditor: ( id, ticket )=>
 		@app.models.users.getRandomAvailibleDeveloper ( err, editor_id )=>
 			if err
-				@error "get ticket", err
+				@error "get random developer", err
 				return
-			@setNextEditor( id, editor_id, ticket )
+
+			if editor_id?
+				@setNextEditor( id, editor_id, ticket )	
+			else
+				@fatal "no random editor availible", id, ticket
 			return
 
 		return

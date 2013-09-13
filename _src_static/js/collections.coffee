@@ -11,6 +11,6 @@ define [ "backbone"], ( Backbone )->
 		model: MenuItem
 
 	collections = 
-		menu: new MenuItems()
+		menu: new MenuItems( [ { id: "menu", title: "Menu", url: "#togglemenu", icon: "ellipsis-horizontal" } ] )
 
 	return collections

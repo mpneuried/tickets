@@ -1,11 +1,13 @@
 p= content
-small= changed
-.user-short.label.label-primary(
-	title=user.name
-	data-toggle="tooltip"
-	data-placement="left"
-)
-	if user.short
-		= user.short
-	else
-		| --
+
+span.time 
+	i.icon.icon-time
+	| geändert #{changed}
+
+span.author 
+	span.label.label-default
+		if author.short
+			= author.short
+		else
+			| --
+	= author.name
