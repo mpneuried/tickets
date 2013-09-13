@@ -12,6 +12,10 @@
 	"engines": {
 		"node": "> 0.8.20"
 	},
+	"scripts": {
+		"install": "grunt build"
+	},
+
 	"dependencies": {
 		"async": "*",
 		"express": "3.3.x",
@@ -24,6 +28,7 @@
 		"request": "*",
 		"rsmq": "*",
 		"tcs_node_mail_client": "*",
+		"node-pushover": "*",
 		"extend": "*",
 		"colors": "*",
 		"jade": "*",

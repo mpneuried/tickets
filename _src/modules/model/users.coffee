@@ -186,8 +186,6 @@ module.exports = class ModelUsers extends require( "./basic" )
 			else
 				data.available = false
 
-
-
 			data.notifyCount = 0
 			data.reactionCount = 0
 			data.ticketCount = 0

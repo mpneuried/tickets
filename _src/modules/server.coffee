@@ -14,6 +14,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 			host: "localhost"
 			basepath: "/"
 			authentication: true
+			notificationServices: [ "tcsmail", "pushover" ]
 			express:
 				title: "Support Tickets"
 				logger: "dev"
@@ -78,8 +79,9 @@ module.exports = class AppServer extends require( "../libs/basic" )
 		@authenticator =  new ( require( "./authenticator" ) )( @, @_getConfig( "authenticator" ) )
 		@workflow =  new ( require( "./workflow" ) )( @, @_getConfig( "workflow" ) )
 		@notifications =  new ( require( "./notifications" ) )( @, @_getConfig( "notifications" ) )
-		@mailservice =  new ( require( "./mailservice" ) )( @, @_getConfig( "mailservice" ) )
-		#@pushoverservice =  new ( require( "./pushoverservice" ) )( @, @_getConfig( "pushoverservice" ) )
+
+		# load notification services
+		require( "./notifications/" )( @ )
 
 		# init models
 		@models.users = new ( require( "./model/users" ) )( "users", @, @_getConfig( "users" ) )

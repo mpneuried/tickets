@@ -1,6 +1,6 @@
 MailClient = require 'tcs_node_mail_client'
 
-module.exports = class Mailservice extends require( "../libs/basic" )
+module.exports = class MailService extends require( "../../libs/basic" )
 
 	defaults: =>
 		return @extend true, super,
@@ -19,19 +19,29 @@ module.exports = class Mailservice extends require( "../libs/basic" )
 		return
 
 	start: =>
-		@app.on "sendmail", @sendMail
+		@app.on "sendnotification", @sendMail
 		return
 
 	sendMail: ( user, data, cb )=>
+
+		if not user.email?
+			cb( null )
+			return
+
 		@debug "send mail to #{user.email}"
 		mail = @factory.create()
 		mail.to( user.email )
 
 		mail.subject( data.subject )
 
-		data.content =+ "\n\n" + data.link + "\n\n" + "... sent by Support Ticket System"
+		html = """
+<p>Hallo #{ user.name },</p>
+<p>#{data.content}</p>
+<a href="#{data.link}">#{data.ticket.title}</a>
+<p>sent by Support Ticket System</p>
+		"""
 
-		mail.text( data.content )
+		mail.html( html )
 
 		mail.send ( err )=>
 			if err
@@ -47,4 +57,4 @@ module.exports = class Mailservice extends require( "../libs/basic" )
 
 	ERRORS: =>
 		@extend super, 
-			"no-configuration": "To use the mail service you have to configurate it via `config.json`"
+			"no-configuration": "To use the mail service you have to configurate `notifications_tcsmail` in `config.json`"

@@ -6,8 +6,6 @@ module.exports = class Notifications extends require( "../libs/basic" )
 
 	start: =>
 		@app.on "notify", @notify
-		#@app.on "sendmail", @notifyEmail
-		#@app.on "sendpush", @notifyEmail
 		return
 
 	notify: ( type, user_id, ticket_id, ticket )=>
@@ -16,23 +14,20 @@ module.exports = class Notifications extends require( "../libs/basic" )
 				@error "get user", err
 				return
 
-			@getNotificationContent type, ticket_id, ticket, ( err, nData )=>
+			@getNotificationContent type, user, ticket_id, ticket, ( err, nData )=>
 				if err
 					@error "get notification content", err
 					return
 
 				@debug "created notification", nData
-				if user.email?
-					@app.emit( "sendmail", user, nData )
 
-				if user.pushkey?
-					@app.emit( "sendpush", user, nData )
+				@app.emit( "sendnotification", user, nData )
 
 				return
 			return
 		return
 
-	getNotificationContent: ( type, ticket_id, ticket, cb )=>
+	getNotificationContent: ( type, receiver, ticket_id, ticket, cb )=>
 
 		_link = "http://#{ @app.config.host }"
 		if @app.config.port isnt 80
@@ -41,6 +36,7 @@ module.exports = class Notifications extends require( "../libs/basic" )
 
 		_notificationData = 
 			link: _link
+			ticket: ticket
 
 		switch	type
 			when "pending"
