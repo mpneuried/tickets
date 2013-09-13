@@ -26,10 +26,10 @@ define [ "marionette", "app" ], ( marionette, App )->
 			_routes
 
 		checkInitialized: ( cb, args )=>
-			if App.Tickets._isInitialized
+			if @module._isInitialized
 					cb.apply( cb, args )
 				else
-					App.Tickets.on "start", =>
+					@module.on "start", =>
 						cb.apply( cb, args )
 						return
 			return
