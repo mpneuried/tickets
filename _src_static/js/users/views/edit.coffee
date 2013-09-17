@@ -1,7 +1,7 @@
-define [ "marionette", "app", "tickets/collections", "tmpl" ], ( marionette, App, collections, tmpl )->
+define [ "marionette", "app", "collections", "tmpl" ], ( marionette, App, collections, tmpl )->
 
-	class TicketEdit extends marionette.ItemView
-		template: tmpl.ticketedit
+	class UserEdit extends marionette.ItemView
+		template: tmpl.useredit
 		serializeData: =>
 			_data = @model.toJSON()
 			_data._isNew = @model.isNew()
@@ -11,17 +11,13 @@ define [ "marionette", "app", "tickets/collections", "tmpl" ], ( marionette, App
 			"submit form": "save"
 
 		modelEvents:
-			"change": "toticket"
+			"change": "tolist"
 
 		collectionEvents: 
 			"add": "tolist"
 
 		tolist: =>
-			App.vent.trigger( "tickets:list" )
-			return
-
-		toticket: =>
-			App.vent.trigger( "tickets:view", @model.id )
+			App.vent.trigger( "users:list" )
 			return
 
 		formData: =>
@@ -29,15 +25,23 @@ define [ "marionette", "app", "tickets/collections", "tmpl" ], ( marionette, App
 			data = {}
 			for line in form.serializeArray()
 				data[ line.name ] = line.value
+
+			if data.password is ""
+				delete data.password
+
+			if data.available?
+				data.available = true
+			else
+				data.available = false
+
 			return data
 
 		save: ( event )=>
 			event.preventDefault()
-
 			if @model.isNew()
 				@collection.create( @formData(), { wait: true } )
 			else
 				@model.save( @formData(), { _ignoreComments: true } )
 			return
 
-	return TicketEdit
+	return UserEdit

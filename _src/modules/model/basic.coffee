@@ -43,7 +43,7 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 	_beforeReturn: ( data )=>
 		return data
 
-	update: ( id, data, cb )=>
+	update: ( id, data, cb, opt )=>
 		@debug "update", id, data
 		@get id, ( err, current )=>
 			if err
@@ -54,11 +54,11 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 					cb( err )
 					return
 
-				@_update( id, data, current, cb )
+				@_update( id, data, current, cb, opt )
 			return
 		return
 
-	_update: ( id, data, current, cb )=>
+	_update: ( id, data, current, cb, opt )=>
 		rM = []
 		mSet = []
 		for _k, _v of data
@@ -70,7 +70,7 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 
 		return
 
-	create: ( data, cb )=>
+	create: ( data, cb, opt )=>
 		@validate null, null, data, ( err, data )=>
 			if err
 				cb( err )
@@ -80,12 +80,12 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 				if err
 					cb( err )
 					return
-				@_create( id, data, cb )
+				@_create( id, data, cb, opt )
 				return
 			return
 		return
 
-	_create: ( id, data, cb )=>
+	_create: ( id, data, cb, opt )=>
 		rM = []
 		mSet = []
 		for _k, _v of data
@@ -225,7 +225,7 @@ module.exports = class BasicModelHash extends require( "../../libs/basic" )
 					cb( null, _ret )
 					return
 
-				when "create" 
+				when "create"
 					_ret = input
 					_ret.id = id
 					_ret = @_beforeReturn( _ret )

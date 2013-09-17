@@ -1,0 +1,52 @@
+extends contentlayout
+
+block name 
+	| User 
+	if _isNew
+		| erstellen
+	else
+		| bearbeiten
+
+block content
+	form( role="form" )
+		
+		.form-group
+			label( for="user-short" ) Kürzel
+			input#user-short.form-control( name="short", placeholder="Kürzel", maxlength=3, value=short )
+
+		.form-group
+			label( for="user-name" ) Name
+			input#user-name.form-control( name="name", placeholder="Nutzername", value=name )
+
+		.form-group
+			label( for="user-email" ) E-Mail
+			input#user-email.form-control( name="email", placeholder="E-Mail", value=email )
+				
+		.form-group
+			label( for="user-password" ) Password
+			input#user-password.form-control( name="password", type="password", placeholder="Password", value="" )
+		
+		.form-group
+			label( for="user-pushkey" ) Pushover Key
+			input#user-pushkey.form-control( name="pushkey", placeholder="Pushover Key", value= pushkey != undefined && pushkey != "null" ? pushkey : "" )
+
+		.form-group
+			label( data-toggle="buttons", class="btn btn-primary#{  available ? " active" : "" }" )
+				input.hidden#user-available( name="available", type="checkbox", checked=available )
+				| Erreichbar
+
+		if this.Init.role == "DEVELOPER"
+			.btn-group( data-toggle="buttons" )
+				label( class="btn btn-primary#{  role == "USER" ? " active" : "" }" )
+					input#roleUSER( type="radio", name="role", value="USER", checked= role == "USER" )
+					| USER
+				label( class="btn btn-primary#{  role == "DEVELOPER" ? " active" : "" }" )
+					input#roleDEVELOPER( type="radio", name="role", value="DEVELOPER", checked= role == "DEVELOPER" )
+					| DEVELOPER
+
+
+		section.footer
+			a.btn.btn-link( href="/users" ) Abbrechen
+			button.btn.btn-primary.pull-right Speichern
+			if id == this.Init.uid
+				a.btn.btn-warning.pull-right( href="/exit", data-bypass="" ) Logout

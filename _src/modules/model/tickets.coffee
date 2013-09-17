@@ -3,6 +3,7 @@ module.exports = class ModelTickets extends require( "./basic" )
 	defaults: =>
 		@extend super,
 			states: [ "NEW", "PENDING", "ACCEPTED", "WORKING", "NEEDANSWER", "REPLIED", "CLOSED" ]
+			userSetStates: [ "REPLIED", "CLOSED" ]
 			idLength: 5
 			stdLimit: 50
 
@@ -23,6 +24,61 @@ module.exports = class ModelTickets extends require( "./basic" )
 		@stateACCEPTED = @config.states[ 2 ]
 		@stateCLOSED = _.last( @config.states )
 		return
+
+	setState: ( id, state, editor, cb )=>
+		if state not in @config.states
+			@_handleError( cb, "unkown-state", state: state )
+			return 
+
+		if state not in @config.userSetStates and editor.role isnt "DEVELOPER"
+			@_handleError( cb, "change-state-forbidden", state: state )
+			return 			
+
+
+		_body = 
+			state: state
+			editor: editor.uid
+
+		_createSysComment = false
+		_comment =
+			type: "sys"
+			author: editor.uid
+			ticket: id
+
+		switch state
+			when "ACCEPTED"
+				_createSysComment = true
+				_comment.content = "Ticket wurde akzeptiert"
+			when "WORKING"
+				_createSysComment = true
+				_comment.content = "Bearbeitung läuft"
+			when "NEEDANSWER"
+				_createSysComment = true
+				_comment.content = "Eine Antwort wird benötigt"
+			when "REPLIED"
+				_createSysComment = true
+				_comment.content = "Ticket-Author hat geantwortet"
+			when "CLOSED"
+				_createSysComment = true
+				_comment.content = "Ticket wurde geschlossen"
+
+		_run = ( err, rMComment )=>
+			if err
+				cb( err )
+				return
+			opt = {}
+			if rMComment?.length
+				opt.addRedisMulti = rMComment
+			@update( id, _body, cb, opt )
+
+			return
+
+		if _createSysComment
+			@app.models.comments.create _comment, _run, 
+		else
+			run( null )
+		return
+
 
 	_get: ( id, cb )=>
 		@redis.get @_rKey( id ), @_handleReturn( "get", id, cb )
@@ -60,7 +116,7 @@ module.exports = class ModelTickets extends require( "./basic" )
 			return
 		return
 
-	_update: ( id, data, current, cb )=>
+	_update: ( id, data, current, cb, opt )=>
 		rM = []
 		mSet = []
 
@@ -75,6 +131,8 @@ module.exports = class ModelTickets extends require( "./basic" )
 		else
 			rM.push( [ "ZADD", @_rKey( null, "opentickets" ), data.changedtime, id ])
 
+		if opt?.addRedisMulti?.length
+			rM = rM.concat( opt.addRedisMulti )
 
 		@redis.multi( rM ).exec @_handleReturn( "update", id, data, current, cb )
 		return
@@ -184,3 +242,5 @@ module.exports = class ModelTickets extends require( "./basic" )
 			"validation-state": "You have to define a state of (<%= states.join( ', ' ) %>)"
 			"validation-state-change": "It is not allowed to change the state from `<%= current %>` to `<%= set %>`"
 			"validation-query-limit": "You can only use a number as limit"
+			"unkown-state": "The state `<%= state %>` is unkown. Pleasde use one of <%= states.join( ', ' ) %>"
+			"change-state-forbidden": "Only a developer can set the state `<%= state %>`"

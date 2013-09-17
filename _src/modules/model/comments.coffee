@@ -52,14 +52,18 @@ module.exports = class ModelComments extends require( "./basic" )
 		@redis.multi( rM ).exec @_handleReturn( "update", id, data, current, cb )
 		return
 
-	_create: ( id, data, cb )=>
+	_create: ( id, data, cb, opt = {} )=>
 		@debug "_create", id, data
 		
 		rM = []
 		rM.push( [ "SET", @_rKey( id ), JSON.stringify( data ) ])
 		rM.push( [ "ZADD", @_rKey( data.ticket, "ticketcomments" ), data.createdtime, id ])
 
-		@redis.multi( rM ).exec @_handleReturn( "create", id, data, cb )
+		if opt.asmultisatement?
+			cb( null, rM )
+		else
+			@redis.multi( rM ).exec @_handleReturn( "create", id, data, cb )
+
 		return
 
 	validate: ( id, current, data, cb )=>

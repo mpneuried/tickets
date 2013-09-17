@@ -73,7 +73,6 @@ module.exports = class ModelUsers extends require( "./basic" )
 		rM.push( [ "HMSET", @_rKey( id ) ].concat( mSet ) )
 
 		# update email mapping
-		console.log 	current.email, data.email
 		if data.email? and current.email isnt data.email
 			rM.push( [ "HDEL", @_rKey( null, "emails" ), current.email ] )
 			rM.push( [ "HSET", @_rKey( null, "emails" ), data.email, id ] )
@@ -92,7 +91,6 @@ module.exports = class ModelUsers extends require( "./basic" )
 				rM.push( [ "SADD", @_rKey( null, "availibledevelopers" ), id ] )
 			else
 				rM.push( [ "SREM", @_rKey( null, "availibledevelopers" ), id ] )
-
 		@redis.multi( rM ).exec @_handleReturn( "update", id, data, current, cb )
 		return
 
@@ -121,8 +119,8 @@ module.exports = class ModelUsers extends require( "./basic" )
 		return
 
 	_beforeReturn: ( data )=>
+		data.available = if data.available is "true" or data.available is true then true else false
 
-		data.available = if data.available is "true" then true else false
 		data.notifyCount = parseInt( data.notifyCount, 10 ) or 0
 		data.reactionCount = parseInt( data.reactionCount, 10 ) or 0
 		data.ticketCount = parseInt( data.ticketCount, 10 ) or 0

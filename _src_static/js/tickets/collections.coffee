@@ -2,15 +2,6 @@ define [ "backbone"], ( Backbone )->
 
 	{ Model, Collection } = Backbone
 
-	class User extends Model
-		default: 
-			email: ""
-			short: "--"
-			name: ""
-			pushkey: null
-			role: "USER"
-			availible: false
-
 	class Ticket extends Model
 		default: 
 			title: ""
@@ -51,10 +42,6 @@ define [ "backbone"], ( Backbone )->
 			content: ""
 			author: ""
 
-	class Users extends Collection
-		model: User
-		url: "/api/users"
-
 	class Tickets extends Collection
 		model: Ticket
 		url: "/api/tickets"
@@ -76,6 +63,5 @@ define [ "backbone"], ( Backbone )->
 
 	collections = 
 		tickets: new Tickets()
-		users: new Users()
 
 	return collections

@@ -1,0 +1,11 @@
+extends contentlayout
+
+block name 
+	| Nutzer
+
+block footer
+	section.footer
+		a.btn.btn-primary.adduser.pull-right( href="/users/new" ) neuer Nutzer
+
+block content
+	ul.listview#userlist

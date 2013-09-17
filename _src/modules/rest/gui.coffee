@@ -4,8 +4,9 @@ module.exports = class Gui extends require( "./basic" )
 		@extend super,
 			routeLogin: "login"
 			routeAdmin: "tickets"
+			usersAdmin: "users"
 			routeTicketList: "tickets"
-			routeTicketcreator: "new"
+			routeTicketcreator: "tickets"
 			routeTicketView: "ticket/:id"
 
 	createRoutes: ( basepath, express )=>
@@ -17,6 +18,7 @@ module.exports = class Gui extends require( "./basic" )
 		express.get "#{basepath}#{ @config.routeLogin }", @loginPage
 
 		express.get "#{basepath}#{ @config.routeAdmin }*", @_checkAuth( false, @config.routeLogin ), @adminPage
+		express.get "#{basepath}#{ @config.usersAdmin }*", @_checkAuth( false, @config.routeLogin ), @adminPage
 
 		express.get "#{basepath}#{ @config.routeTicketcreator }", @_checkAuth( false, @config.routeLogin ), @newTicketPage
 		express.get "#{basepath}#{ @config.routeTicketView }", @_checkAuth( false, @config.routeLogin ), @ticketPage
@@ -42,7 +44,7 @@ module.exports = class Gui extends require( "./basic" )
 			else if sessiondata.role is "DEVELOPER"
 				res.redirect( "#{@basepath}#{ @config.routeAdmin }" )
 			else
-				res.redirect( "#{@basepath}#{ @config.routeTicketcreator }" )
+				res.redirect( "#{@basepath}#{ @config.usersAdmin }" )
 
 			return
 
@@ -52,7 +54,7 @@ module.exports = class Gui extends require( "./basic" )
 		if req?.session?.role is "DEVELOPER"
 			res.redirect( "#{@basepath}#{ @config.routeAdmin }" )
 		else if req?.session?.role?
-			res.redirect( "#{@basepath}#{ @config.routeTicketcreator }" )
+			res.redirect( "#{@basepath}#{ @config.usersAdmin }" )
 		else
 			redirect = "#{@basepath}#{ @config.routeLogin }"
 			_rdir = redirect + if redirect.indexOf( "?" ) >= 0 then "&" else "?" + "redir=" + encodeURIComponent( req.url )
@@ -71,7 +73,8 @@ module.exports = class Gui extends require( "./basic" )
 
 	adminPage: ( req, res )=>
 		_user = req.session
-		res.render( "admin", user: _user )
+		session = _.pick( _user, ["uid", "name", "short", "role"] )
+		res.render( "admin", user: session )
 		return
 
 	newTicketPage: ( req, res )=>

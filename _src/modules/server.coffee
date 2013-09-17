@@ -11,7 +11,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 	defaults: =>
 		@extend super,
 			port: 8400,
-			host: "localhost"
+			host: "192.168.0.36"
 			basepath: "/"
 			authentication: true
 			notificationServices: [ "tcsmail", "pushover" ]

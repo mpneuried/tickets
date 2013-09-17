@@ -24,6 +24,9 @@ h6
 	nav
 		display none
 
+i.icon
+	text-align center
+
 a#open-icon-header
 	background center center no-repeat transparent
 	display block
@@ -34,10 +37,13 @@ a#open-icon-header
 	left 0
 	color #eee
 	font-size 20px
-	line-height 59px
+	line-height 60px
 	padding 0 20px
 	text-decoration none
 	z-index 2
+	i
+		width 20px
+		display inline-block
 
 section.header
 	position fixed
@@ -46,31 +52,52 @@ section.header
 	left 0
 	padding 10px 20px
 	background-color rgba( black, .7 )
-	height 61px
+	height 55px
 	z-index 1
 	h3.lead
 		font-size 25px
 		color #fff
-		margin 0
+		margin 0 35px
 		padding 0
 		font-weight 100
-		text-align center 
+		text-align center
+		white-space nowrap
+		overflow hidden
+		text-overflow ellipsis
 
 section.content
-	padding 60px 0 90px
+	padding 55px 0 90px
 	margin 0
+
 
 section.footer
 	position fixed
 	bottom 0
 	right 0
 	left 0
+	height 55px
 	padding 10px 20px
 	background-color rgba( black, .15 )
 	z-index 1
 
 	.btn.pull-right
 		margin-left 10px
+
+.ticketdetail
+	section.footer
+		bottom 55px
+
+section.footer.footer-state
+	bottom 0px
+	background-color rgba( white, .8 )
+	
+	.footer-left
+		width 47%
+		float left
+
+	.footer-right
+		width 47%
+		float right
 
 .mm-opening
 .mm-opened
@@ -82,6 +109,11 @@ section.footer
 	#open-icon-menu
 		display none
 
+	section.header
+		h3.lead
+			font-size 18px
+			line-height 40px
+
 @media( min-width: 500px )
 	a#open-icon-header
 		display none
@@ -89,6 +121,8 @@ section.footer
 	section.header
 	section.footer
 		left 60px
+
+
 
 @media( min-width: 900px )
 	#open-icon-menu

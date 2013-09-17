@@ -20,7 +20,7 @@ block content
 				span.short= item[0]
 				span.long= item
 
-	//h3.title= title
+	h3.title= title
 
 	p.desc= desc
 
@@ -30,15 +30,15 @@ block content
 
 	form( role="form" )#addcoment
 		.form-group
-			textarea#ticket-desc.form-control( name="content", placeholder="Ticket Kommentar ..." )= desc
+			textarea#ticket-desc.form-control( name="content", placeholder="Ticket Kommentar ..." )
 			small.help-block Es kann die Markdown Syntax verwendet werden
 
-		case state
-			when "NEW"			
-				button.btn.btn-default.btn-sm.pull-right( type="submit" ) Akzeptieren / Kommentieren
-			when "ACCEPTED"			
-				button.btn.btn-primary.btn-sm.pull-right( type="submit" ) Frage stellen
 		button.btn.btn-default.btn-sm.pull-right( type="submit" ) Kommentieren
+		//- case state
+		//- 	when "NEW"			
+		//- 		button.btn.btn-success.btn-sm.pull-right( type="submit" ) Akzeptieren / Kommentieren
+		//- 	when "ACCEPTED"			
+		//- 		button.btn.btn-primary.btn-sm.pull-right( type="submit" ) Frage stellen
 
 block header
 	if editor
@@ -50,8 +50,41 @@ block header
 
 
 block footer
-	section.footer
-		a.btn.btn-link( href="/tickets" ) zurück
-		a.btn.btn-default.pull-right( href="/tickets/edit/" + id ) bearbeiten
+	if this.Init.uid == editor.id && state != "NEEDANSWER"
+		section.footer.footer-state
+			case state
+				when "ACCEPTED"			
+					.footer-left
+						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
+					.footer-right
+						button.btn.btn-success.btn-block.setstate( data-state="WORKING" ) STARTEN
+				when "WORKING"			
+					.footer-left
+						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
+					.footer-right
+						button.btn.btn-primary.btn-block.setstate( data-state="NEEDANSWER" ) Antwort benötigt
 
-		a.btn.btn-danger.pull-right( href="/tickets/edit/" + id + "/close" ) schließen
+				when "REPLIED"
+					.footer-left
+						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
+					.footer-right
+						button.btn.btn-success.btn-block.setstate( data-state="WORKING" ) Wieder STARTEN
+	else if this.Init.role == "DEVELOPER" && stateIdx <= 1 
+		section.footer.footer-state
+			case state
+				when "NEW"
+					button.btn.btn-success.btn-block.setstate( data-state="ACCEPTED" ) Akzeptieren
+				when "PENDING"
+					button.btn.btn-success.btn-block.setstate( data-state="ACCEPTED" ) Akzeptieren
+	else if state == "NEEDANSWER" && this.Init.uid == author.id
+		section.footer.footer-state
+			button.btn.btn-success.btn-block.setstate( data-state="REPLIED" ) beantwortet
+	else if stateIdx > 1 && state != "NEEDANSWER"
+		section.footer.footer-state
+			button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
+					
+
+
+	section.footer
+		a.btn.btn-default( href="/tickets" ) zurück
+		a.btn.btn-info.pull-right( href="/tickets/edit/" + id ) bearbeiten

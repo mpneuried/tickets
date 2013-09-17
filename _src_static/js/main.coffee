@@ -25,9 +25,8 @@ require.config
 			deps: [ "jade" ]
 
 
-require [ "bootstrap", "app", "tickets/app" ], ( Bootstrap, Main, Tickets )->
-
-	#window.Main = Main
+require [ "bootstrap", "app", "users/app", "tickets/app" ], ( Bootstrap, Main, Tickets )->
+	window.Main = Main
 	Main.start()
 
 	$( 'body' ).on 'mouseenter.tooltip.data-api', '[data-toggle^=tooltip]', ( el )->

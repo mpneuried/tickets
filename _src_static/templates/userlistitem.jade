@@ -1,0 +1,25 @@
+if available
+	span.state.state-accepted(
+		title="Erriechbar"
+		data-toggle="tooltip"
+		data-placement="right"
+	)
+else
+	span.state.state-closed(
+		title="Nicht Erriechbar"
+		data-toggle="tooltip"
+		data-placement="right"
+	)
+
+
+a.title( href="/users/" + id )= name
+
+.user-short.label.label-primary.editor(
+	title=short
+	data-toggle="tooltip"
+	data-placement="left"
+)= short
+
+span.time 
+	i.icon.icon-circle
+	= role

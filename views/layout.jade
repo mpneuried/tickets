@@ -5,9 +5,15 @@ block append head
 	script( src="/js/vendor/jquery.mmenu.js" )
 	script( src="/js/vendor/require.js", data-main="/js/main" )
 	:coffeescript
+
 		$ ->
-			$('#menu').mmenu()
+			$('#menu').mmenu(
+				zposition: "next"
+			)
 			return
+	script.
+		window.Init = !{JSON.stringify(locals.user)}
+
 
 block frameContent
 	nav#menu
@@ -24,8 +30,8 @@ block frameContent
 		#menuitems		
 				
 
-	#page
+	#page( data-userid=id )
 		#container
 			block Content
 		a#open-icon-header( href="#menu" )
-			i( class=[ "icon", "icon-white", "icon-ellipsis-horizontal" ] )
+			i( class=[ "icon", "icon-white", "icon-ellipsis-vertical" ] )
