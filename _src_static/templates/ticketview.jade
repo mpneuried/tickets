@@ -22,7 +22,8 @@ block content
 
 	h3.title= title
 
-	p.desc= desc
+	.desc
+		!= desc
 
 	h4.comments Kommentare
 
@@ -55,18 +56,18 @@ block footer
 			case state
 				when "ACCEPTED"			
 					.footer-left
-						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
+						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 					.footer-right
 						button.btn.btn-success.btn-block.setstate( data-state="WORKING" ) STARTEN
 				when "WORKING"			
 					.footer-left
-						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
+						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 					.footer-right
 						button.btn.btn-primary.btn-block.setstate( data-state="NEEDANSWER" ) Antwort benötigt
 
 				when "REPLIED"
 					.footer-left
-						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
+						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 					.footer-right
 						button.btn.btn-success.btn-block.setstate( data-state="WORKING" ) Wieder STARTEN
 	else if this.Init.role == "DEVELOPER" && stateIdx <= 1 
@@ -81,8 +82,10 @@ block footer
 			button.btn.btn-success.btn-block.setstate( data-state="REPLIED" ) beantwortet
 	else if stateIdx > 1 && state != "NEEDANSWER"
 		section.footer.footer-state
-			button.btn.btn-danger.btn-block.setstate( data-state="CLOSED" ) Ticket schließen
-					
+			button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
+	else
+		section.footer.footer-state
+			p.info Keine Status Änderungen zulässig
 
 
 	section.footer

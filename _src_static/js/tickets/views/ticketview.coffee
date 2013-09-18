@@ -1,5 +1,5 @@
-define [ "marionette", "moment", "app", "tmpl", "collections", "tickets/collections" ], ( marionette, moment, App, tmpl, AppCollections, collections )->
-
+define [ "marionette", "moment", "showdown", "app", "tmpl", "collections", "tickets/collections" ], ( marionette, moment, Showdown, App, tmpl, AppCollections, collections )->
+	_mdconverter = new Showdown.converter()
 	class CommentView extends marionette.ItemView
 		template: tmpl.comment
 		tagName: "li"
@@ -8,6 +8,8 @@ define [ "marionette", "moment", "app", "tmpl", "collections", "tickets/collecti
 
 		serializeData: =>
 			_data = @model?.toJSON() or {}
+			if _data?.content?.length
+				_data.content = _mdconverter.makeHtml( _data?.content )
 			_author = AppCollections?.users?.get( _data.author )
 			_data.author = _author?.toJSON() or {}
 			_data.changed = moment( _data.changedtime * 1000 ).fromNow()
@@ -57,18 +59,19 @@ define [ "marionette", "moment", "app", "tmpl", "collections", "tickets/collecti
 				url: "/api/tickets/state/#{_state}/#{@model.id}"
 				method: "GET"
 				success: =>
+					_set = 
+						state: _state
+
+					if _state is "ACCEPTED"
+						_set.editor = window.Init.uid
+
+					@model.set( _set )
+
 					if _state is "CLOSED"
 						@tolist()
 						return
 
 					@collection.fetch()
-					_set = 
-						state: _state
-
-					if _state is "ACCEPTED"
-						_set.author = window.Init.uid
-					console.log _set
-					@model.set( state: _state )
 					return
 				error: =>
 					console.log "ERROR", arguments
@@ -78,6 +81,8 @@ define [ "marionette", "moment", "app", "tmpl", "collections", "tickets/collecti
 
 		serializeData: =>
 			_data = @model?.toJSON() or {}
+			if _data?.desc?.length
+				_data.desc = _mdconverter.makeHtml( _data?.desc )
 			_user = AppCollections?.users?.get( _data.author )
 			_author = AppCollections?.users?.get( _data.author )
 			_data.author = _author?.toJSON() or {}

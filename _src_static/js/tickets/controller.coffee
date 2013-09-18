@@ -18,6 +18,9 @@ define [ "marionette", "lib/modulecontroller", "app", "tickets/collections", "ti
 
 		view: ( id )=>
 			model = collections.tickets.get( id )
+			if not model?
+				App.vent.trigger( "tickets:list" )
+				return
 			App.content.show( new viewTicket( collection: model.get( "comments" ), model: model ) )
 			@navigate( "view", id: id )
 			return

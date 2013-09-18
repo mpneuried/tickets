@@ -166,9 +166,12 @@ module.exports = class ModelTickets extends require( "./basic" )
 					@_handleError( cb, "validation-state", states: @config.states[1..] )
 					return
 			
-				if not @statematrix[ @config.states.indexOf( data.state ) ][ @config.states.indexOf( current.state ) ]
+				if data?.state?.length and not @statematrix[ @config.states.indexOf( data.state ) ][ @config.states.indexOf( current.state ) ]
 					@_handleError( cb, "validation-state-change", current: current.state, set: data.state )
 					return			
+
+				if not data?.desc?.length
+					data.desc = ""
 
 				data.closedtime = 0
 				if data.state? and data.state is @stateCLOSED
@@ -205,8 +208,7 @@ module.exports = class ModelTickets extends require( "./basic" )
 					return
 
 				if not data?.desc?.length
-					@_handleError( cb, "validation-desc" )
-					return
+					data.desc = ""
 
 				data.state = @stateNEW
 				data.starttime = sec

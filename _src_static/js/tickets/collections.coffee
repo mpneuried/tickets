@@ -1,4 +1,4 @@
-define [ "backbone"], ( Backbone )->
+define [ "backbone", "lib/collection" ], ( Backbone, FilterCollection )->
 
 	{ Model, Collection } = Backbone
 
@@ -42,7 +42,7 @@ define [ "backbone"], ( Backbone )->
 			content: ""
 			author: ""
 
-	class Tickets extends Collection
+	class Tickets extends FilterCollection
 		model: Ticket
 		url: "/api/tickets"
 		comparator : ( el )->
@@ -61,7 +61,10 @@ define [ "backbone"], ( Backbone )->
 			super
 		comparator: "createdtime"
 
+	_allTicktes = new Tickets()
+
 	collections = 
-		tickets: new Tickets()
+		tickets: _allTicktes.sub( ( mod )->mod.get( "state" ) isnt "CLOSED" )
+		closedtickets: _allTicktes.sub( ( mod )->mod.get( "state" ) is "CLOSED" )
 
 	return collections

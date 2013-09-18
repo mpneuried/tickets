@@ -11,7 +11,8 @@ module.exports = class AppServer extends require( "../libs/basic" )
 	defaults: =>
 		@extend super,
 			port: 8400,
-			host: "192.168.0.36"
+			host: "localhost"
+			listenHost: null
 			basepath: "/"
 			authentication: true
 			notificationServices: [ "tcsmail", "pushover" ]
@@ -118,7 +119,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 		server = http.createServer( @express )
 		server.listen( @config.port, @config.host )
 	
-		@log "info", "http listen to port #{@config.host}:#{ @config.port }"
+		@log "info", "http listen to port #{@config.listenHost}:#{ @config.port }"
 		return
 
 	allowCrossDomain: ( req, res, next ) =>

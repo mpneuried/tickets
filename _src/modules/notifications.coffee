@@ -38,15 +38,15 @@ module.exports = class Notifications extends require( "../libs/basic" )
 			link: _link
 			ticket: ticket
 
+		_notificationData.subject = "Support Tickets - #{ticket.title} ( ##{ticket_id} )"
 		switch	type
 			when "pending"
-				_notificationData.subject = "Neues Ticket '#{ticket_id}'"
 				_notificationData.content = "Ein neues Ticket '#{ticket.title} ( #{ticket_id} )' wurde angelegt."
 			when "accepted"
-				_notificationData.subject = "Ticket '#{ticket_id}' wurde akzeptiert"
+				#_notificationData.subject = "Ticket '#{ticket_id}' wurde akzeptiert"
 				_notificationData.content = "Das Ticket '#{ticket.title} ( #{ticket_id} )' wurde akzeptiert."
 			else
-				_notificationData.subject = "Ticket '#{ticket_id}' status '#{type}'"
+				#_notificationData.subject = "Ticket '#{ticket_id}' status '#{type}'"
 				_notificationData.content = "Der Status des Ticket '#{ticket.title} ( #{ticket_id} )' wurde auf '#{type}' geändert."
 
 		cb( null, _notificationData )

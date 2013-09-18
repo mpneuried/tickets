@@ -1,4 +1,7 @@
-define [ "marionette", "collections", "tickets/collections", "tmpl", "views/loading" ], ( marionette, AppCollections, collections, tmpl, viewLoading )->
+define [ "marionette", "collections", "tickets/collections", "tmpl" ], ( marionette, AppCollections, collections, tmpl )->
+
+	class EmtyTickets extends marionette.ItemView
+		template: tmpl.emptyticketlist
 
 	class Ticket extends marionette.ItemView
 		className: "ticket"
@@ -15,7 +18,7 @@ define [ "marionette", "collections", "tickets/collections", "tmpl", "views/load
 			return _data
 
 	return class TicketsList extends marionette.CompositeView
-		emptyView: viewLoading
+		emptyView: EmtyTickets
 		itemView: Ticket
 		template: tmpl.ticketlist
 		itemViewContainer: "#ticketlist"

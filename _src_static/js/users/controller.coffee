@@ -29,11 +29,17 @@ define [ "marionette", "lib/modulecontroller", "app", "collections", "users/view
 			return
 
 		add: =>
+			if Init.role is "USER"
+				App.vent.trigger( "tickets:list" )
+				return
 			App.content.show( new viewUserEdit( collection: collections.users, model: new collections.users.model() ) )
 			@navigate( "add" )
 			return
 
 		list: =>
+			if Init.role is "USER"
+				App.vent.trigger( "tickets:list" )
+				return
 			App.content.show( new viewUserList( collection: collections.users ) )
 			@navigate( "list" )
 			return

@@ -7,10 +7,13 @@ require.config
 		moment: "vendor/moment"
 		marionette: "vendor/backbone.marionette"
 		jade: "vendor/jaderuntime"
+		showdown: "vendor/showdown"
 		tmpl: "tmpl"
 	shim:
 		underscore:
 			exports: "_"
+		showdown:
+			exports: "Showdown"
 		moment:
 			exports: "moment"
 		backbone:
@@ -25,7 +28,7 @@ require.config
 			deps: [ "jade" ]
 
 
-require [ "bootstrap", "app", "users/app", "tickets/app" ], ( Bootstrap, Main, Tickets )->
+require [ "bootstrap", "lib/plugins", "app", "users/app", "tickets/app" ], ( Bootstrap, Plugins, Main, Tickets )->
 	window.Main = Main
 	Main.start()
 
