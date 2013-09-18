@@ -23,8 +23,8 @@ module.exports = class PushOverService extends require( "../../libs/basic" )
 
 	sendPush: ( user, data, cb )=>
 
-		if not user.pushkey?
-			cb( null )
+		if not user.pushkey?.length
+			cb( null ) if cb
 			return
 
 		@debug "send push notification to #{user.pushkey} (#{user.short})"

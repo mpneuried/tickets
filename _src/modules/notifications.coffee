@@ -14,6 +14,10 @@ module.exports = class Notifications extends require( "../libs/basic" )
 				@error "get user", err
 				return
 
+			if not user.available
+				@info "do not send notification to user ( #{user.short} ) not available"
+				return
+
 			@getNotificationContent type, user, ticket_id, ticket, ( err, nData )=>
 				if err
 					@error "get notification content", err
@@ -39,7 +43,7 @@ module.exports = class Notifications extends require( "../libs/basic" )
 			ticket: ticket
 
 		_notificationData.subject = "Support Tickets - #{ticket.title} ( ##{ticket_id} )"
-		switch	type
+		switch type
 			when "pending"
 				_notificationData.content = "Ein neues Ticket '#{ticket.title} ( #{ticket_id} )' wurde angelegt."
 			when "accepted"

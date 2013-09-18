@@ -34,7 +34,6 @@ module.exports = class ModelTickets extends require( "./basic" )
 			@_handleError( cb, "change-state-forbidden", state: state )
 			return 			
 
-
 		_body = 
 			state: state
 			editor: editor.uid
@@ -100,7 +99,7 @@ module.exports = class ModelTickets extends require( "./basic" )
 			@_handleError( cb, "validation-query-offset" )
 			return		
 
-		@redis.zrangebyscore @_rKey( null, _type ), "-inf", "+inf", "LIMIT", _offset or 0, _limit, ( err, ids )=>
+		@redis.zrevrangebyscore @_rKey( null, _type ), "+inf", "-inf", "LIMIT", _offset or 0, _limit, ( err, ids )=>
 			if err
 				cb( err )
 				return
@@ -157,7 +156,6 @@ module.exports = class ModelTickets extends require( "./basic" )
 			_pick = [ "title", "desc" ]
 
 			if id?
-
 				data = _.pick( data, _pick.concat( [ "state", "editor" ] ) )
 
 				data.changedtime = sec

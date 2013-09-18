@@ -36,5 +36,10 @@ require [ "bootstrap", "lib/plugins", "app", "users/app", "tickets/app" ], ( Boo
 		$( @ ).removeAttr( "data-toggle" ).tooltip( delay: { show: 500, hide: 100 } ).tooltip( "show" )
 		$( @ ).on "click", ()->
 			$( @ ).tooltip( "hide" )
+			return
+		return
+
+	$( 'body' ).on 'mouseenter.btn.data-api', '[data-toggle^=btn]', ( el )->
+		$( @ ).removeAttr( "data-toggle" ).button()
 		return
 	return

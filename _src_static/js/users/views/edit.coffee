@@ -38,6 +38,8 @@ define [ "marionette", "app", "collections", "tmpl" ], ( marionette, App, collec
 
 		save: ( event )=>
 			event.preventDefault()
+			@$( ".savebtn" )?.button( "loading" )
+			
 			if @model.isNew()
 				@collection.create( @formData(), { wait: true } )
 			else

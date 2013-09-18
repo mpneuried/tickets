@@ -80,6 +80,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 		@authenticator =  new ( require( "./authenticator" ) )( @, @_getConfig( "authenticator" ) )
 		@workflow =  new ( require( "./workflow" ) )( @, @_getConfig( "workflow" ) )
 		@notifications =  new ( require( "./notifications" ) )( @, @_getConfig( "notifications" ) )
+		@queue =  new ( require( "./queue" ) )( @, @_getConfig( "queue" ) )
 
 		# load notification services
 		require( "./notifications/" )( @ )

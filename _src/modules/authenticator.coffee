@@ -5,7 +5,7 @@ module.exports = class Authenticator extends require( "../libs/basic" )
 
 	login: ( req, email, password, cb )=>
 
-		@app.models.users.getByMail email, ( err, user )=>
+		@app.models.users.getByMail email.toLowerCase(), ( err, user )=>
 			@debug "getbymail", email, user
 			if err
 				@_delayError( cb, "login-failed" )

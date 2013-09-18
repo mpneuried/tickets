@@ -25,7 +25,7 @@ module.exports = class ModelComments extends require( "./basic" )
 			@_handleError( cb, "validation-query-offset" )
 			return		
 
-		@redis.zrangebyscore @_rKey( query.ticket, "ticketcomments" ), "-inf", "+inf", "LIMIT", _offset or 0, _limit, ( err, ids )=>
+		@redis.zrevrangebyscore @_rKey( query.ticket, "ticketcomments" ), "+inf", "-inf", "LIMIT", _offset or 0, _limit, ( err, ids )=>
 			if err
 				cb( err )
 				return

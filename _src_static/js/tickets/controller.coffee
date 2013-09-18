@@ -26,8 +26,10 @@ define [ "marionette", "lib/modulecontroller", "app", "tickets/collections", "ti
 			return
 
 		list: =>
-			App.content.show( new viewTicketList( collection: collections.tickets ) )
-			@navigate( "list" )
+			collections.tickets.fetch().then =>
+				App.content.show( new viewTicketList( collection: collections.tickets ) )
+				@navigate( "list" )
+				return
 			return
 
 		add: =>

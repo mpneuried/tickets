@@ -59,7 +59,8 @@ define [ "backbone", "lib/collection" ], ( Backbone, FilterCollection )->
 		fetch: =>
 			@_fetched = true
 			super
-		comparator: "createdtime"
+		comparator : ( el )->
+			return el.get( "createdtime" )
 
 	_allTicktes = new Tickets()
 

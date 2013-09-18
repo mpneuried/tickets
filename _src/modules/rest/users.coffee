@@ -1,5 +1,20 @@
 module.exports = class RestUsers extends require( "./crud" )
-		
+	
+	defaults: =>
+		return @extend true, super,
+			use: 
+				list: true
+				get: true
+				create: true
+				update: true
+				del: false
+			onlyDev: 
+				list: false
+				get: false
+				create: true
+				update: false
+				del: true
+
 	_beforeSend: ( type, data )=>
 		if type is "list"
 			_ret = []

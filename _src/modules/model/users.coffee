@@ -82,15 +82,19 @@ module.exports = class ModelUsers extends require( "./basic" )
 			if data.role is "DEVELOPER"
 				rM.push( [ "ZREM", @_rKey( null, "users" ), id ] )
 				rM.push( [ "SADD", @_rKey( null, "developers" ), id ] )
+
 			else
 				rM.push( [ "ZREM", @_rKey( null, "developers" ), id ] )
 				rM.push( [ "SADD", @_rKey( null, "users" ), id ] )
+				rM.push( [ "SREM", @_rKey( null, "availibledevelopers" ), id ] )
 
-		if data.available isnt current.available
+		#@warning "availdev_test", data.role, current.role, data.available, "CHECK",( (data.role or current.role) is "DEVELOPER" ), data.available?, data.available isnt current.available
+		if ( ( data.role or current.role ) is "DEVELOPER" ) and data.available? and data.available isnt current.available
 			if data.available
 				rM.push( [ "SADD", @_rKey( null, "availibledevelopers" ), id ] )
 			else
 				rM.push( [ "SREM", @_rKey( null, "availibledevelopers" ), id ] )
+
 		@redis.multi( rM ).exec @_handleReturn( "update", id, data, current, cb )
 		return
 
@@ -110,8 +114,6 @@ module.exports = class ModelUsers extends require( "./basic" )
 			rM.push( [ "SADD", @_rKey( null, "developers" ), id ] )
 			if data.available
 				rM.push( [ "SADD", @_rKey( null, "availibledevelopers" ), id ] )
-			else
-				rM.push( [ "SREM", @_rKey( null, "availibledevelopers" ), id ] )	
 		else
 			rM.push( [ "SADD", @_rKey( null, "users" ), id ] )
 
@@ -139,6 +141,9 @@ module.exports = class ModelUsers extends require( "./basic" )
 			if data?.email?.length and not @emailRegex.test( data?.email )
 				@_handleError( cb, "validation-email" )
 				return
+			else if data?.email?.length
+				data.email = data.email.toLowerCase()
+
 
 			if data?.role?.length and data?.role not in @app.config.roles
 				@_handleError( cb, "validation-role", roles: @app.config.roles )
@@ -148,9 +153,9 @@ module.exports = class ModelUsers extends require( "./basic" )
 				salt = bcrypt.genSaltSync( @config.bcryptRounds )
 				data.password = bcrypt.hashSync( data.password, salt )
 			
-			if data?.role is "DEVELOPER" or current?.role is "DEVELOPER"
-				if data?.available?
-					data.available = Boolean( data.available )
+			
+			if data?.available?
+				data.available = Boolean( data.available )
 
 		else
 			if not data?.name?.length
@@ -164,6 +169,8 @@ module.exports = class ModelUsers extends require( "./basic" )
 			if not data?.email?.length or not @emailRegex.test( data?.email )
 				@_handleError( cb, "validation-email" )
 				return
+			else
+				data.email = data.email.toLowerCase()
 
 			if not data?.pushkey?.length 
 				data.pushkey = null

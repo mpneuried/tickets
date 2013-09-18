@@ -25,7 +25,7 @@ define [ "marionette", "lib/modulecontroller", "app", "collections", "users/view
 		view: ( id )=>
 			model = collections.users.get( id )
 			App.content.show( new viewUserEdit( model: model ) )
-			@navigate( "me", id: id  )
+			@navigate( "view", id: id  )
 			return
 
 		add: =>

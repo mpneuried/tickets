@@ -25,16 +25,29 @@ block content
 	.desc
 		!= desc
 
+	.infos
+		span.time 
+			i.icon.icon-time
+			| geändert #{changed}
+
+		span.author 
+			span.label.label-default
+				if author.short
+					= author.short
+				else
+					| --
+			= author.name
+	
 	h4.comments Kommentare
 
 	#comments
 
 	form( role="form" )#addcoment
 		.form-group
-			textarea#ticket-desc.form-control( name="content", placeholder="Ticket Kommentar ..." )
+			textarea#comment-content.form-control( name="content", placeholder="Ticket Kommentar ..." )
 			small.help-block Es kann die Markdown Syntax verwendet werden
 
-		button.btn.btn-default.btn-sm.pull-right( type="submit" ) Kommentieren
+		button.btn.btn-default.btn-sm.pull-right.savebtn( type="submit", data-loading-text="Loading..." ) Kommentieren
 		//- case state
 		//- 	when "NEW"			
 		//- 		button.btn.btn-success.btn-sm.pull-right( type="submit" ) Akzeptieren / Kommentieren
@@ -56,33 +69,33 @@ block footer
 			case state
 				when "ACCEPTED"			
 					.footer-left
-						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
+						button.btn.btn-danger.btn-block.setstate( data-loading-text="Loading...", data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 					.footer-right
-						button.btn.btn-success.btn-block.setstate( data-state="WORKING" ) STARTEN
+						button.btn.btn-success.btn-block.setstate( data-loading-text="Loading...", data-state="WORKING" ) STARTEN
 				when "WORKING"			
 					.footer-left
-						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
+						button.btn.btn-danger.btn-block.setstate( data-loading-text="Loading...", data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 					.footer-right
-						button.btn.btn-primary.btn-block.setstate( data-state="NEEDANSWER" ) Antwort benötigt
+						button.btn.btn-primary.btn-block.setstate( data-loading-text="Loading...", data-state="NEEDANSWER" ) Antwort benötigt
 
 				when "REPLIED"
 					.footer-left
-						button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
+						button.btn.btn-danger.btn-block.setstate( data-loading-text="Loading...", data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 					.footer-right
-						button.btn.btn-success.btn-block.setstate( data-state="WORKING" ) Wieder STARTEN
+						button.btn.btn-success.btn-block.setstate( data-loading-text="Loading...", data-state="WORKING" ) Wieder STARTEN
 	else if this.Init.role == "DEVELOPER" && stateIdx <= 1 
 		section.footer.footer-state
 			case state
 				when "NEW"
-					button.btn.btn-success.btn-block.setstate( data-state="ACCEPTED" ) Akzeptieren
+					button.btn.btn-success.btn-block.setstate( data-loading-text="Loading...", data-state="ACCEPTED" ) Akzeptieren
 				when "PENDING"
-					button.btn.btn-success.btn-block.setstate( data-state="ACCEPTED" ) Akzeptieren
+					button.btn.btn-success.btn-block.setstate( data-loading-text="Loading...", data-state="ACCEPTED" ) Akzeptieren
 	else if state == "NEEDANSWER" && this.Init.uid == author.id
 		section.footer.footer-state
-			button.btn.btn-success.btn-block.setstate( data-state="REPLIED" ) beantwortet
-	else if stateIdx > 1 && state != "NEEDANSWER"
-		section.footer.footer-state
-			button.btn.btn-danger.btn-block.setstate( data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
+			button.btn.btn-success.btn-block.setstate( data-loading-text="Loading...", data-state="REPLIED" ) beantwortet
+	//- else if stateIdx > 1 && state != "NEEDANSWER"
+	//- 	section.footer.footer-state
+	//- 		button.btn.btn-danger.btn-block.setstate( data-loading-text="Loading...", data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 	else
 		section.footer.footer-state
 			p.info Keine Status Änderungen zulässig

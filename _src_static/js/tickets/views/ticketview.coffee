@@ -26,11 +26,12 @@ define [ "marionette", "moment", "showdown", "app", "tmpl", "collections", "tick
 			"click .setstate": "changeState"
 
 		modelEvents:
-			"change": "render"	
+			"change": "render"
 
 		initialize: =>
 			super
 			@collection = @model.get( "comments" )
+			@collection.on "sync", @render
 			if not @model.isNew() and not @collection._fetched
 				@collection.fetch()
 			return
@@ -38,14 +39,23 @@ define [ "marionette", "moment", "showdown", "app", "tmpl", "collections", "tick
 		formData: =>
 			form = @$el.find( "form" )
 			data = {}
+			data.createdtime = Math.ceil( Date.now( ) / 1000 )
 			for line in form.serializeArray()
 				data[ line.name ] = line.value
 			return data
 
 		save: ( event )=>
+			@$( ".savebtn" )?.button( "loading" )
 			event.preventDefault()
-			@collection.create( @formData(), wait: true )
-			$( "#ticket-desc" ).val( "" )
+			@collection.create( @formData(), wait: true, trigger: false, success: @afterCommentAdd )
+
+			#$( "#ticket-desc" ).val( "" )
+			return
+
+		afterCommentAdd: =>
+			@$( ".savebtn" )?.button( "reset" )
+			@$( "#comment-content" )?.val( "" )
+			@collection.fetch()
 			return
 
 		tolist: =>
@@ -53,8 +63,10 @@ define [ "marionette", "moment", "showdown", "app", "tmpl", "collections", "tick
 			return
 
 		changeState: ( event )=>
-			_state = $( event.currentTarget ).data( "state" ).toUpperCase()
-
+			_btn = $( event.currentTarget )
+			_state = _btn.data( "state" ).toUpperCase()
+			_btn?.button( "loading" )
+			
 			$.ajax
 				url: "/api/tickets/state/#{_state}/#{@model.id}"
 				method: "GET"
