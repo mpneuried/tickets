@@ -29,7 +29,7 @@ module.exports = class Queue extends require( "../libs/basic" )
 		@app.models.tickets.get ticket_id, ( err, ticket )=>
 			if err? and err.name is "not-found"
 				@queue.del( msgid )
-				@queue.next( msgid )
+				@queue.next()
 			else if err
 				@error "get ticket from queue", err
 				return
@@ -41,15 +41,15 @@ module.exports = class Queue extends require( "../libs/basic" )
 						return
 					@queue.del( msgid )
 					@app.emit "selecteditor", ticket_id, ticket
-					@queue.next( msgid )
+					@queue.next()
 					return
 			else if ticket.state is "PENDING"
 				@app.emit "selecteditor", ticket_id, ticket
 				@queue.del( msgid )
-				@queue.next( msgid )
+				@queue.next()
 			else
 				@queue.del( msgid )
-				@queue.next( msgid )
+				@queue.next()
 			return
 
 		return
