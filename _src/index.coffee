@@ -1,7 +1,7 @@
 fs = require "fs"
+path = require "path"
 extend = require( "extend" )
-
-fs.readFile "config.json", ( err, file )=>
+fs.readFile path.resolve( __dirname + "/config.json" ), ( err, file )=>
 	if err?.code is "ENOENT"
 		_cnf = {}
 	else if err

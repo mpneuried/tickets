@@ -1,9 +1,12 @@
 extends frame
 
 block append head
-	link( href="/css/styles.css", rel="stylesheet" )
-	script( src="/js/vendor/jquery.mmenu.js" )
-	script( src="/js/vendor/require.js", data-main="/js/main" )
+	script.
+		window.Init = !{JSON.stringify(locals.user)};
+		window.Init.version = "!{locals.version}";
+	link( href="/css/styles.css?v" + locals.version, rel="stylesheet" )
+	script( src="/js/vendor/jquery.mmenu.js?v" + locals.version )
+	script( src="/js/vendor/require.js?v" + locals.version, data-main="/js/main.js?v" + locals.version )
 	:coffeescript
 
 		$ ->
@@ -11,14 +14,12 @@ block append head
 				zposition: "next"
 			)
 			return
-	script.
-		window.Init = !{JSON.stringify(locals.user)}
 
 
 block frameContent
 	nav#menu
 
-		h4.lead Support Tickets
+		h4.lead= locals.apptitle
 		//- a.user-short.label.label-primary(
 		//- 	title="LOGOUT - " + user.name
 		//- 	href="/exit"

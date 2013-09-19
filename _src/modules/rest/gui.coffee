@@ -20,9 +20,6 @@ module.exports = class Gui extends require( "./basic" )
 		express.get "#{basepath}#{ @config.routeAdmin }*", @_checkAuth( false, @config.routeLogin ), @adminPage
 		express.get "#{basepath}#{ @config.usersAdmin }*", @_checkAuth( false, @config.routeLogin ), @adminPage
 
-		express.get "#{basepath}#{ @config.routeTicketcreator }", @_checkAuth( false, @config.routeLogin ), @newTicketPage
-		express.get "#{basepath}#{ @config.routeTicketView }", @_checkAuth( false, @config.routeLogin ), @ticketPage
-
 		return
 
 	authenticate: ( req, res )=>
@@ -74,13 +71,5 @@ module.exports = class Gui extends require( "./basic" )
 	adminPage: ( req, res )=>
 		_user = req.session
 		session = _.pick( _user, ["uid", "name", "short", "role"] )
-		res.render( "admin", user: session )
-		return
-
-	newTicketPage: ( req, res )=>
-		res.send( "newTicketPage" )
-		return
-
-	ticketPage: ( req, res )=>
-		res.send( "ticketPage" )
+		res.render( "admin", user: session, version: @app.config.version, apptitle: @app.config.title )
 		return

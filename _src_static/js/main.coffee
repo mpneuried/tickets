@@ -9,6 +9,7 @@ require.config
 		jade: "vendor/jaderuntime"
 		showdown: "vendor/showdown"
 		tmpl: "tmpl"
+	urlArgs: "v" + window.Init.version
 	shim:
 		underscore:
 			exports: "_"

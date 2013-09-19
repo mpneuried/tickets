@@ -1,8 +1,13 @@
 module.exports = (grunt) ->
+	deploy = grunt.file.readJSON( "deploy.json" )
+	
+	privateKey = grunt.file.read(deploy.pathToPem)
+
 
 	# Project configuration.
 	grunt.initConfig
 		pkg: grunt.file.readJSON('package.json')
+		deploy: deploy
 		regarde:
 			serverjs:
 				files: ["_src/**/*.coffee"]
@@ -103,6 +108,23 @@ module.exports = (grunt) ->
 				src: [ "**" ]
 				dest: "static/"
 
+		uglify:
+			options:
+				banner: '/*!\Tickets - v<%= pkg.version %>\n*/\n'
+			staticjs:
+				expand: true
+				cwd: 'static',
+				src: ["js/**/*.js"]
+				dest: "static/"
+				ext: ".js"
+
+		compress:
+			main:
+				options: 
+					archive: "<%= pkg.name %>_deploy.zip"
+				files: [
+						{ src: [ "package.json", "index.js", "modules/**", "static/**", "libs/**", "views/**" ], dest: "./" }
+				]
 
 		jade: 
 			frontend:
@@ -120,13 +142,88 @@ module.exports = (grunt) ->
 				files: 
 					"static/js/tmpl.js": "_src_static/templates/*.jade"
 
+		sftp:	
+			deploy:
+				files:
+					"./":  [ "<%= pkg.name %>_deploy.zip" ]
+				options:
+					path: "<%= deploy.targetServerPath %>"
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+					createDirectories: true
+	
+			configfile:
+				files:
+					"./":  [ "<%= deploy.configfile %>" ]
+				options:
+					path: "<%= deploy.targetServerPath %>"
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+					createDirectories: true
+
+		sshexec:
+			cleanup:
+				command: "rm -rf <%= deploy.targetServerPath %>*"
+				options:
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+			unzip:
+				command: [ "cd <%= deploy.targetServerPath %> && unzip -u -q -o <%= pkg.name %>_deploy.zip", "ls" ]
+				options:
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+					createDirectories: true
+			doinstall:
+				command: [ "cd <%= deploy.targetServerPath %> && npm install --production && rm -f <%= pkg.name %>_deploy.zip" ]
+				options:
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+					createDirectories: true
+			renameconfig:
+				command: [ "cd <%= deploy.targetServerPath %> && mv <%= deploy.configfile %> config.json" ]
+				options:
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+					createDirectories: true
+
+			stop:
+				command: [ "sudo -S stop <%= deploy.servicename %>" ]
+				options:
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+
+			start:
+				command: [ "sudo -S start <%= deploy.servicename %>" ]
+				options:
+					host: "<%= deploy.host %>"
+					username: "<%= deploy.username %>"
+					privateKey: privateKey
+					passphrase: "<%= deploy.passphrase %>"
+
 	# Load npm modules
 	grunt.loadNpmTasks "grunt-regarde"
 	grunt.loadNpmTasks "grunt-contrib-coffee"
 	grunt.loadNpmTasks "grunt-contrib-copy"
 	grunt.loadNpmTasks "grunt-contrib-jade"
 	grunt.loadNpmTasks "grunt-contrib-stylus"
+	grunt.loadNpmTasks "grunt-contrib-compress"
+	grunt.loadNpmTasks "grunt-contrib-uglify"
 	grunt.loadNpmTasks "grunt-mocha-cli"
+	grunt.loadNpmTasks "grunt-ssh"
 	#grunt.loadNpmTasks "grunt-cson"
 	grunt.loadNpmTasks "grunt-include-replace"
 
@@ -140,4 +237,10 @@ module.exports = (grunt) ->
 	grunt.registerTask "test", [ "mochacli:main" ]
 
 	# build the project
-	grunt.registerTask "build",[ "coffee", "includereplace", "copy", "jade", "stylus" ]
+	grunt.registerTask "build", [ "coffee", "includereplace", "copy", "jade", "stylus" ]
+
+	grunt.registerTask "release", [ "build", "uglify", "compress" ]	
+
+	grunt.registerTask "sshdeploy", [ "sshexec:cleanup", "sftp:deploy", "sshexec:unzip", "sshexec:doinstall", "sftp:configfile", "sshexec:renameconfig", "sshexec:stop", "sshexec:start" ]
+
+	grunt.registerTask "deploy", [ "release", "sshdeploy", "coffee" ]		

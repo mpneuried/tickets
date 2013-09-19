@@ -14,12 +14,14 @@ module.exports = class AppServer extends require( "../libs/basic" )
 			host: "localhost"
 			listenHost: null
 			basepath: "/"
+			version: "0.0.1"
 			authentication: true
 			notificationServices: [ "tcsmail", "pushover" ]
+			title: "Support Tickets"
 			express:
-				title: "Support Tickets"
 				logger: "dev"
 				tmpFolder: null
+				staticCacheTime: 1000 * 60 * 60 * 24 * 31
 			redis:
 				host: 'localhost'
 				port: 6379
@@ -49,7 +51,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 
 	configure: =>
 		
-		@express.set( "title", @config.express.title )
+		@express.set( "title", @config.title )
 		@express.use( @allowCrossDomain )
 		@express.use( express.cookieParser() )
 		@express.use( express.logger( @config.express.logger ) )
@@ -58,10 +60,10 @@ module.exports = class AppServer extends require( "../libs/basic" )
 		@express.use( express.session({ key: "tickets", store: new RedisStore( client: @redis, prefix: "sessions:mtckts:" ), secret: "d0d693c0-1613-11e3-8ffd-0800200c9a66" } ) )
 		
 		#@express.use( express.directory( path.resolve( "./static/" ) ) )
+		console.log path.resolve( __dirname + "/../static/" )
+		@express.use( express.static( path.resolve( __dirname, "../static" ), maxAge: @config.express.staticCacheTime ) )
 
-		@express.use( express.static( path.resolve( "./static/" ) ) )
-
-		@express.set('views', path.resolve( './views' ))
+		@express.set('views', path.resolve( __dirname, '../views' ))
 		@express.set('view engine', 'jade')
 
 		###

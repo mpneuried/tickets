@@ -13,7 +13,7 @@ module.exports = class RsmqIntervall extends require( "./basic" )
 
 		@queue = new RedisSMQ( client: @redis, ns: @prefix + "queue" )
 		@queue.createQueue qname: @config.queuename, ( err, resp )=>
-			if err.name is "queueExists"
+			if err?.name is "queueExists"
 				@emit "ready"
 				return
 

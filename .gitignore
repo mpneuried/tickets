@@ -2,6 +2,8 @@
 *.lock
 *.conflict
 *.DS_Store
+*.zip
+/redis-tickets_deploy
 
 .project
 .settings
@@ -12,5 +14,8 @@
 /libs
 /modules
 /config.json
+/deploy.json
+/config*.json
+/secrets.json
 /*.js
 *.sublime*
