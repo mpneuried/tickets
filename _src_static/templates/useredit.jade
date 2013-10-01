@@ -30,9 +30,9 @@ block content
 			label( for="user-pushkey" ) Pushover Key
 			input#user-pushkey.form-control( name="pushkey", placeholder="Pushover Key", value= pushkey != undefined && pushkey != "null" ? pushkey : "" )
 
-		.form-group
-			label( data-toggle="buttons", class="btn btn-primary#{  available ? " active" : "" }" )
-				input.hidden#user-available( name="available", type="checkbox", checked=available )
+		.checkbox
+			label
+				input#user-available( name="available", type="checkbox", checked=available )
 				| Erreichbar
 
 		if this.Init.role == "DEVELOPER"
