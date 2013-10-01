@@ -9,7 +9,7 @@ module.exports = class PushOverService extends require( "../../libs/basic" )
 	initialize: =>
 
 		if not @config.apptoken
-			@_handleError( null, "no-configuration" )
+			@_handleError( "INIT", "no-configuration" )
 			return
 
 		@service = new PushOver( token: @config.apptoken )

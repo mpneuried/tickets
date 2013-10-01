@@ -10,7 +10,7 @@ module.exports = class MailService extends require( "../../libs/basic" )
 	initialize: =>
 
 		if not @config.mailAppId
-			@_handleError( null, "no-configuration" )
+			@_handleError( "INIT", "no-configuration" )
 			return
 
 		@factory = new MailClient( @config.mailAppId, @config.mailConfig )
