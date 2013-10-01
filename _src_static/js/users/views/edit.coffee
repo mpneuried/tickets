@@ -43,7 +43,11 @@ define [ "marionette", "app", "collections", "tmpl" ], ( marionette, App, collec
 			if @model.isNew()
 				@collection.create( @formData(), { wait: true } )
 			else
-				@model.save( @formData(), { _ignoreComments: true } )
+				@model.set(@formData())
+				if @model.changedAttributes() is false
+					@tolist()
+				else
+					@model.save( { _ignoreComments: true } )
 			return
 
 	return UserEdit
