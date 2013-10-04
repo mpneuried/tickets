@@ -4,7 +4,7 @@ define [ "marionette", "app", "collections", "users/controller" ], ( marionette,
 
 	new Controller( module )
 
-	$.when( AppCollections.users.fetch() ).then( ( ->
+	$.when( AppCollections.users.fetchInit() ).then( ( ->
 		_me = AppCollections.users.get( Init.uid )
 		_menuList = [ { url: "users/me", title: _me.get( "name" ), icon: "user", sort: 5 } ]
 

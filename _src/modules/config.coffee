@@ -1,5 +1,5 @@
 module.exports = 
-	version: "0.1.1"
+	version: "0.1.2"
 	port: 3003
 	logging:
 		severity: "info"

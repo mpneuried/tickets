@@ -1,6 +1,6 @@
-define [ "backbone"], ( Backbone )->
+define [ "backbone", "lib/collections" ], ( Backbone, Collections )->
 
-	{ Model, Collection } = Backbone
+	{ Model } = Backbone
 
 	class MenuItem extends Model
 		default: 
@@ -16,7 +16,7 @@ define [ "backbone"], ( Backbone )->
 			role: "USER"
 			availible: false
 
-	class MenuItems extends Collection
+	class MenuItems extends Collections.Collection
 		model: MenuItem
 		comparator: ( a, b )->
 			_a = a.get( "sort" )
@@ -28,7 +28,7 @@ define [ "backbone"], ( Backbone )->
 			else
 				return 0
 
-	class Users extends Collection
+	class Users extends Collections.Collection
 		model: User
 		url: "/api/users"
 

@@ -6,6 +6,6 @@ define [ "marionette", "app", "collections", "tickets/controller", "tickets/coll
 
 	AppCollections.menu.add( [ { url: "/tickets", title: "Offene Tickets", icon: "ticket", sort: 12 }, { url: "/tickets/new", title: "Ticket erstellen", icon: "plus-sign", sort: 11 } ] )
 	AppCollections.menu.trigger( "reset" )
-	$.when( collections.tickets.fetch(), AppCollections.users.fetch() ).then( ( ->module.start() ), console.error )
+	$.when( collections.tickets.fetchInit(), AppCollections.users.fetchInit() ).then( ( ->module.start() ), console.error )
 
 	return module

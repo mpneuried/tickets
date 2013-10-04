@@ -1,6 +1,27 @@
 define [ "backbone" ], ( Backbone )->
 
-	return class FilterCollection extends Backbone.Collection
+	colls = {}
+
+	class colls.Collection extends Backbone.Collection
+		fetchInit: ( force = false )=>
+			# run force if last fetch is older than 500 ms
+			if not @_fetchInit? or ( force and not @_fetchInit.state? and Date.now() - @_fetchInit > 500 )
+				deferred = @fetch()
+				@_fetchInit = deferred
+				deferred.then =>
+					@_fetchInit = Date.now()
+				return deferred
+			else
+				if @_fetchInit.state?
+					@_fetchInit.then =>
+						return
+					return @_fetchInit
+				else
+					deferred = $.Deferred()
+					deferred.resolve()
+					return deferred.promise()
+
+	class colls.FilterCollection extends colls.Collection
 		constructor: ->
 			super
 			@subColls = []
@@ -63,3 +84,5 @@ define [ "backbone" ], ( Backbone )->
 			@subColls.push( _sub )
 
 			return _sub
+
+	return colls

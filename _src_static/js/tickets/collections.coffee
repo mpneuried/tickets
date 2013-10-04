@@ -1,6 +1,6 @@
-define [ "backbone", "lib/collection" ], ( Backbone, FilterCollection )->
+define [ "backbone", "lib/collections" ], ( Backbone, Collections )->
 
-	{ Model, Collection } = Backbone
+	{ Model } = Backbone
 
 	class Ticket extends Model
 		default: 
@@ -42,13 +42,13 @@ define [ "backbone", "lib/collection" ], ( Backbone, FilterCollection )->
 			content: ""
 			author: ""
 
-	class Tickets extends FilterCollection
+	class Tickets extends Collections.FilterCollection
 		model: Ticket
 		url: "/api/tickets"
 		comparator : ( el )->
 			return el.get( "changedtime" ) * -1
 
-	class Comments extends Collection
+	class Comments extends Collections.Collection
 		model: Comment
 		url: =>
 			tid = @_ticket.id
