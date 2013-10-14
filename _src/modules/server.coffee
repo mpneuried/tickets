@@ -120,7 +120,7 @@ module.exports = class AppServer extends require( "../libs/basic" )
 	start: =>
 		# we instantiate the app using express 2.x style in order to use socket.io
 		server = http.createServer( @express )
-		server.listen( @config.port, @config.host )
+		server.listen( @config.port, @config.listenHost )
 	
 		@log "info", "http listen to port #{@config.listenHost}:#{ @config.port }"
 		return
