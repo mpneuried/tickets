@@ -33,9 +33,13 @@ module.exports = class Notifications extends require( "../libs/basic" )
 
 	getNotificationContent: ( type, receiver, ticket_id, ticket, cb )=>
 
-		_link = "http://#{ @app.config.host }"
-		if @app.config.port isnt 80
-			_link += ":" + @app.config.port
+		if @config.notificationHost?
+			_link = @config.notificationHost
+		else
+			_link = "http://#{ @app.config.host }"
+			if @app.config.port isnt 80
+				_link += ":" + @app.config.port
+		
 		_link += "/tickets/#{ticket_id}"
 
 		_notificationData = 
