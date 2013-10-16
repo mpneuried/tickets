@@ -5,6 +5,7 @@ require.config
 		backbone: "vendor/backbone"
 		underscore: "vendor/underscore"
 		moment: "vendor/moment"
+		moment_de: "vendor/moment_langs/de"
 		marionette: "vendor/backbone.marionette"
 		jade: "vendor/jaderuntime"
 		showdown: "vendor/showdown"

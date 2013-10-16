@@ -1,4 +1,5 @@
-define [ "marionette", "moment", "showdown", "app", "tmpl", "collections", "tickets/collections" ], ( marionette, moment, Showdown, App, tmpl, AppCollections, collections )->
+define [ "marionette", "moment", "moment_de", "showdown", "app", "tmpl", "collections", "tickets/collections" ], ( marionette, moment, moment_de, Showdown, App, tmpl, AppCollections, collections )->
+	
 	_mdconverter = new Showdown.converter()
 	class CommentView extends marionette.ItemView
 		template: tmpl.comment
