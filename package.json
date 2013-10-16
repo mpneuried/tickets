@@ -32,7 +32,8 @@
 		"colors": "*",
 		"jade": "*",
 		"i18next": "*",
-		"coffee-script": "*"
+		"coffee-script": "*",
+		"sanitizer": "*"
 	},
 	"devDependencies": {
 		"should": "*",

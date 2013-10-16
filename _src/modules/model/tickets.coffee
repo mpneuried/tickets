@@ -1,3 +1,6 @@
+sanitizer = require( "sanitizer" )
+utils = require( "../../libs/utils" )
+
 module.exports = class ModelTickets extends require( "./basic" )
 
 	defaults: =>
@@ -154,6 +157,12 @@ module.exports = class ModelTickets extends require( "./basic" )
 			@debug "validate", id, data
 
 			_pick = [ "title", "desc" ]
+
+			if data?.title?.length
+				data.title = utils.trim( sanitizer.escape( data.title ) )
+
+			if data?.desc?.length
+				data.desc = utils.trim( sanitizer.escape( data.desc ) )
 
 			if id?
 				data = _.pick( data, _pick.concat( [ "state", "editor" ] ) )

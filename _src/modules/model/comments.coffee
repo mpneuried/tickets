@@ -1,3 +1,6 @@
+sanitizer = require( "sanitizer" )
+utils = require( "../../libs/utils" )
+
 module.exports = class ModelComments extends require( "./basic" )
 
 	defaults: =>
@@ -79,6 +82,9 @@ module.exports = class ModelComments extends require( "./basic" )
 
 				data = _.omit( data, _omit.concat( [ "ticket", "author" ] ) )
 
+				if data?.content?.length
+					data.content = utils.trim( sanitizer.escape( data.content ) )
+
 				if data?.content? and not data?.content?.length
 					@_handleError( cb, "validation-content" )
 					return
@@ -96,6 +102,9 @@ module.exports = class ModelComments extends require( "./basic" )
 					@_handleError( cb, "validation-ticket" )
 					return
 
+				if data?.content?.length
+					data.content = utils.trim( sanitizer.escape( data.content ) )
+
 				if not data?.content?.length
 					@_handleError( cb, "validation-content" )
 					return
@@ -107,6 +116,7 @@ module.exports = class ModelComments extends require( "./basic" )
 			cb( null, data )
 			return
 		return
+
 
 	_generateId: ( data, cb )=>
 		cb( null, data.ticket + ":" + data.createdtime )

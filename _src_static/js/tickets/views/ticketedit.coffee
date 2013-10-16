@@ -38,11 +38,8 @@ define [ "marionette", "app", "tickets/collections", "tmpl" ], ( marionette, App
 			if @model.isNew()
 				@collection.create( @formData(), { wait: true } )
 			else
-				@model.set(@formData())
-				if @model.changedAttributes() is false
-					@toList()
-				else
-					@model.save( { _ignoreComments: true } )
+				@model.save( @formData(), { wait: true, _ignoreComments: true } )
+			
 			return
 
 	return TicketEdit
