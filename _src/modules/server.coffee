@@ -53,11 +53,11 @@ module.exports = class AppServer extends require( "../libs/basic" )
 		
 		@express.set( "title", @config.title )
 		@express.use( @allowCrossDomain )
-		@express.use( express.cookieParser() )
+		@express.use( express.cookieParser(  ) )
 		@express.use( express.logger( @config.express.logger ) )
 		@express.use( express.compress() )
 		@express.use( express.bodyParser( uploadDir: @config.express.tmpFolder ) )
-		@express.use( express.session({ key: "tickets", store: new RedisStore( client: @redis, prefix: "sessions:mtckts:" ), secret: "d0d693c0-1613-11e3-8ffd-0800200c9a66" } ) )
+		@express.use( express.session({ key: "tickets", store: new RedisStore( client: @redis, prefix: "sessions:mtckts:" ), secret: "d0d693c0-1613-11e3-8ffd-0800200c9a66", cookie: { maxAge: 1000 * 60 * 60 * 24 * 31 } ) )
 		
 		#@express.use( express.directory( path.resolve( "./static/" ) ) )
 		console.log path.resolve( __dirname + "/../static/" )

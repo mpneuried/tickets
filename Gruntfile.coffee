@@ -99,7 +99,7 @@ module.exports = (grunt) ->
 					suffix: ''
 
 				files:
-					"": ["index.js"]
+					"": ["modules/config.js"]
 
 		copy:
 			static:
