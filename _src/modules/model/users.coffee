@@ -60,7 +60,7 @@ module.exports = class ModelUsers extends require( "./basic" )
 			if results?[ 0 ]?
 				cb( null, results[ 0 ] )
 			else
-				@_handleError( null, "no-randomuser-found" )
+				@_handleError( cb, "no-randomuser-found" )
 			return
 		return
 
