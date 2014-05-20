@@ -99,7 +99,7 @@ module.exports = (grunt) ->
 					suffix: ''
 
 				files:
-					"": ["modules/config.js"]
+					"modules/config.js": ["modules/config.js"]
 
 		copy:
 			static:
@@ -117,13 +117,26 @@ module.exports = (grunt) ->
 				src: ["js/**/*.js"]
 				dest: "static/"
 				ext: ".js"
+				rename: ( dest, src )->
+					folder = src.substring(0, src.lastIndexOf('/'))
+					filename = src.substring(src.lastIndexOf('/'), src.length)
+
+					filename = filename.substring(0, filename.lastIndexOf('.'))
+
+					return dest + folder + filename + '.js'
 
 		compress:
 			main:
 				options: 
-					archive: "<%= pkg.name %>_deploy.zip"
+					archive: "<%= pkg.name %>_deploy_<%= pkg.version %>.zip"
 				files: [
 						{ src: [ "package.json", "index.js", "modules/**", "static/**", "libs/**", "views/**" ], dest: "./" }
+				]
+			elasticbeanstalk:
+				options: 
+					archive: "eb_<%= pkg.name %>_deploy_<%= pkg.version %>.zip"
+				files: [
+						{ src: [ "package.json", "index.js", "modules/**", "static/**", "libs/**", "views/**", ".ebextensions/**", "config_aws_eb.json" ], dest: "./" }
 				]
 
 		jade: 
@@ -239,7 +252,9 @@ module.exports = (grunt) ->
 	# build the project
 	grunt.registerTask "build", [ "coffee", "includereplace", "copy", "jade", "stylus" ]
 
-	grunt.registerTask "release", [ "build", "uglify", "compress" ]	
+	grunt.registerTask "release", [ "build", "uglify", "compress:main" ]
+
+	grunt.registerTask "release-eb", [ "build", "uglify", "compress:elasticbeanstalk" ]	
 
 	grunt.registerTask "sshdeploy", [ "sshexec:cleanup", "sftp:deploy", "sshexec:unzip", "sshexec:doinstall", "sftp:configfile", "sshexec:renameconfig", "sshexec:stop", "sshexec:start" ]
 

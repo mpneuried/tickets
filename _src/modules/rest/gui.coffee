@@ -12,6 +12,8 @@ module.exports = class Gui extends require( "./basic" )
 	createRoutes: ( basepath, express )=>
 		@basepath = basepath
 
+		express.get "#{basepath}ping", @ping
+
 		express.post "#{basepath}authenticate", @authenticate
 		express.get "#{basepath}exit", @_checkAuth( false, @config.routeLogin ), @exit
 
@@ -66,6 +68,10 @@ module.exports = class Gui extends require( "./basic" )
 
 	loginPage: ( req, res )=>
 		res.render( "login", req.query )
+		return
+
+	ping: ( req, res )=>
+		res.send( "OK" )
 		return
 
 	adminPage: ( req, res )=>
