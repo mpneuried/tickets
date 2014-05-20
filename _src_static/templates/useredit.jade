@@ -37,10 +37,10 @@ block content
 
 		if this.Init.role == "DEVELOPER"
 			.btn-group( data-toggle="buttons" )
-				label( class="btn btn-primary#{  role == "USER" ? " active" : "" }" )
+				label( class="btn btn-primary#{ ( role == 'USER' ? ' active' : '' ) }" )
 					input#roleUSER( type="radio", name="role", value="USER", checked= role == "USER" )
 					| USER
-				label( class="btn btn-primary#{  role == "DEVELOPER" ? " active" : "" }" )
+				label( class="btn btn-primary#{  role == 'DEVELOPER' ? ' active' : '' }" )
 					input#roleDEVELOPER( type="radio", name="role", value="DEVELOPER", checked= role == "DEVELOPER" )
 					| DEVELOPER
 

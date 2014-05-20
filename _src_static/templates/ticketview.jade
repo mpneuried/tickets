@@ -93,9 +93,9 @@ block footer
 	else if state == "NEEDANSWER" && this.Init.uid == author.id
 		section.footer.footer-state
 			button.btn.btn-success.btn-block.setstate( data-loading-text="Loading...", data-state="REPLIED" ) beantwortet
-	//- else if stateIdx > 1 && state != "NEEDANSWER"
-	//- 	section.footer.footer-state
-	//- 		button.btn.btn-danger.btn-block.setstate( data-loading-text="Loading...", data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
+		//- else if stateIdx > 1 && state != "NEEDANSWER"
+		//- 	section.footer.footer-state
+		//- 		button.btn.btn-danger.btn-block.setstate( data-loading-text="Loading...", data-state="CLOSED", data-toggle="deletebutton", data-confirm-text="Wirklich schließen?" ) Ticket schließen
 	else
 		section.footer.footer-state
 			p.info Keine Status Änderungen zulässig

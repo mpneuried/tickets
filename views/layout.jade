@@ -7,13 +7,14 @@ block append head
 	link( href="/css/styles.css?v" + locals.version, rel="stylesheet" )
 	script( src="/js/vendor/jquery.mmenu.js?v" + locals.version )
 	script( src="/js/vendor/require.js?v" + locals.version, data-main="/js/main.js?v" + locals.version )
-	:coffeescript
-
-		$ ->
-			$('#menu').mmenu(
-				zposition: "next"
-			)
-			return
+	
+	script
+		:coffee
+			$ ->
+				$('#menu').mmenu(
+					zposition: "next"
+				)
+				return
 
 
 block frameContent

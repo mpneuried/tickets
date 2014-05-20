@@ -1,4 +1,4 @@
-doctype 5
+doctype html
 html(lang="de")
 	head
 		block head
@@ -19,10 +19,11 @@ html(lang="de")
 			link( rel="shortcut icon", href="/favicon.ico", type="image/x-icon" )
 			link( rel="icon", href="/favicon.ico", type="image/x-icon" )
 
-			//script( src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" )
-			:coffeescript
-				if typeof jQuery == 'undefined'
-					document.write unescape("%3Cscript src='/js/vendor/jquery-2.0.3.js?v!{locals.version}' type='text/javascript'%3E%3C/script%3E")
+			script( src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" )
+			script
+				:coffee
+					if typeof jQuery == 'undefined'
+						document.write unescape("%3Cscript src='/js/vendor/jquery-2.0.3.js?v!{locals.version}' type='text/javascript'%3E%3C/script%3E")
 
 	body
 		block frameContent

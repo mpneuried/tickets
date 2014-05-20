@@ -2,7 +2,7 @@
 	"author": "mp, pl, <mp@tcs.de> (www.tcs.de)",
 	"name": "redis-tickets",
 	"description": "TCS Support Ticket System",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"homepage": "https://github.com/mpneuried/tickets",
 	"private": false,
 	"repository": {
@@ -18,7 +18,7 @@
 	"dependencies": {
 		"async": "*",
 		"express": "3.3.x",
-		"connect-redis": "*",
+		"connect-redis": "1.4.x",
 		"redis": "*",
 		"hiredis": "*",
 		"lodash": "*",
